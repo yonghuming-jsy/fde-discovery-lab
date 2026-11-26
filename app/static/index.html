@@ -1,0 +1,412 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Knowledge Wiki</title>
+<style>
+:root{--ink:#172d3a;--muted:#667883;--line:#dce5e7;--paper:#f5f8f7;--card:#fff;--teal:#087e78;--teal2:#e7f5f2;--gold:#c38e42;--red:#b94949;--shadow:0 12px 32px rgba(22,55,64,.08)}
+*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font:15px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}button,input,textarea,select{font:inherit}button{cursor:pointer}
+.topbar{background:#153443;color:white;padding:15px max(22px,calc((100vw - 1180px)/2));display:flex;align-items:center;justify-content:space-between;gap:18px}.brand{display:flex;align-items:center;gap:12px;font-weight:750;letter-spacing:.2px}.mark{height:34px;width:34px;border-radius:11px;background:#66cbb4;color:#103943;display:grid;place-items:center;font-weight:900}.top-actions{display:flex;gap:12px;align-items:center;color:#d8e9e8;font-size:13px}
+main{max-width:1180px;margin:32px auto;padding:0 22px}.hero{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:24px;gap:16px}.eyebrow{color:var(--teal);font-size:12px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase}.hero h1{font-size:30px;line-height:1.15;margin:7px 0 8px}.hero p{color:var(--muted);margin:0;max-width:700px}.layout{display:grid;grid-template-columns:280px minmax(0,1fr);gap:20px}.stack{display:grid;gap:16px;align-content:start}.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:20px;box-shadow:var(--shadow)}.card h2{font-size:17px;margin:0 0 12px}.card h3{font-size:14px;margin:0 0 8px}.muted{color:var(--muted);font-size:13px}.small{font-size:12px}.field{display:grid;gap:5px;margin:11px 0}.field label{font-size:12px;color:var(--muted);font-weight:650}.field input,.field textarea,.field select{width:100%;border:1px solid var(--line);border-radius:9px;padding:10px 11px;background:#fff;color:var(--ink);outline:none}.field input:focus,.field textarea:focus,.field select:focus{border-color:#48aaa0;box-shadow:0 0 0 3px #d9f0eb}.field textarea{min-height:118px;resize:vertical}.btn{border:0;border-radius:9px;padding:10px 14px;background:var(--teal);color:white;font-weight:700}.btn:hover{background:#056a65}.btn.secondary{background:var(--teal2);color:var(--teal)}.btn.ghost{background:#eef2f3;color:var(--ink)}.btn.danger{background:#fbebeb;color:var(--red)}.btn:disabled{opacity:.5;cursor:not-allowed}.actions{display:flex;flex-wrap:wrap;gap:8px}.divider{height:1px;background:var(--line);margin:16px 0}.hidden{display:none!important}.status{padding:10px 12px;border-radius:9px;background:#fff7e8;color:#825b24;margin:12px 0}.status.error{background:#fff0ef;color:#a03939}.status.ok{background:#eaf7ef;color:#256343}.tenant-pill{display:inline-flex;background:#e6f4f2;color:#136e69;border-radius:100px;padding:4px 10px;font-size:12px;font-weight:700}.kb-list{display:grid;gap:8px}.kb-item{border:1px solid var(--line);padding:12px;border-radius:11px;background:#fff;text-align:left;color:var(--ink)}.kb-item:hover,.kb-item.active{border-color:var(--teal);background:#f0faf8}.kb-item strong{display:block}.doc-row{display:flex;justify-content:space-between;gap:12px;border-bottom:1px solid var(--line);padding:9px 0}.doc-row:last-child{border:0}.tag{display:inline-block;padding:2px 8px;border-radius:100px;background:#eef2f3;color:#536771;font-size:11px}.tag.failed{background:#fff0ef;color:#a03939}.answer{white-space:pre-wrap;line-height:1.7;background:#f4f8f7;border:1px solid var(--line);padding:15px;border-radius:11px}.citation{border-left:3px solid #68baaa;padding:8px 12px;margin:8px 0;background:#f6faf9;border-radius:0 8px 8px 0}.wiki-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:10px}.wiki-node{padding:13px;border:1px solid var(--line);border-radius:11px;background:#fff}.wiki-node strong{display:block;margin-bottom:4px}.edges{margin-top:15px;display:grid;gap:7px}.edge{padding:8px 10px;border-radius:8px;background:#eef4f4;font-size:13px}.login-wrap{max-width:440px;margin:64px auto}.login-wrap .card{padding:28px}.login-wrap h1{margin:0 0 5px}.toast{position:fixed;right:20px;bottom:20px;max-width:400px;background:#143745;color:white;padding:13px 17px;border-radius:10px;box-shadow:var(--shadow);z-index:10}.two{display:grid;grid-template-columns:1fr 1fr;gap:16px}.section-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}.metric{font-size:12px;color:var(--muted)}.mono{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px;word-break:break-all}
+@media(max-width:850px){main{margin:20px auto}.layout{grid-template-columns:1fr}.hero{display:block}.two{grid-template-columns:1fr}.topbar{padding:13px 18px}}
+</style>
+</head>
+<body>
+<header class="topbar">
+  <div class="brand"><div class="mark">K</div><span>Knowledge Wiki</span></div>
+  <div class="top-actions"><span id="who"></span><button id="logout" class="btn ghost hidden" type="button">退出</button></div>
+</header>
+<main>
+  <section id="login-view" class="login-wrap">
+    <div class="card">
+      <div class="eyebrow">LOCAL FIRST · TENANT SAFE</div>
+      <h1>登录知识工作台</h1>
+      <p class="muted">使用管理员提供的账号登录。平台管理员可创建租户；租户成员只能访问授权范围内的资料。</p>
+      <form id="login-form">
+        <div class="field"><label for="email">邮箱</label><input id="email" type="email" autocomplete="username" required></div>
+        <div class="field"><label for="password">密码</label><input id="password" type="password" autocomplete="current-password" required></div>
+        <button class="btn" type="submit">登录</button>
+      </form>
+      <div id="login-error" class="status error hidden"></div>
+    </div>
+  </section>
+
+  <section id="app-view" class="hidden">
+    <div class="hero">
+      <div><div class="eyebrow">KNOWLEDGE OPERATIONS</div><h1>从资料到可追溯知识</h1><p>导入文档、用 RAG 回答问题，并生成附来源的 LLM Wiki 与知识图谱。AI Harness 会在每次请求前限制租户与组织范围。</p></div>
+      <div id="tenant-badge" class="tenant-pill"></div>
+    </div>
+    <div id="notice" class="status hidden"></div>
+    <section id="platform-panel" class="card hidden" style="margin-bottom:18px">
+      <div class="section-head"><div><h2>平台管理 · 创建 SaaS 租户</h2><div class="muted">平台管理员可以创建租户和第一位租户管理员；不会因此获得租户文档读取权限。</div></div></div>
+      <form id="tenant-form" class="two">
+        <div class="field"><label>租户名称</label><input name="name" required></div>
+        <div class="field"><label>租户 slug（小写英文和短横线）</label><input name="slug" pattern="[a-z0-9]+(-[a-z0-9]+)*" required></div>
+        <div class="field"><label>首位管理员姓名</label><input name="admin_name" required></div>
+        <div class="field"><label>首位管理员邮箱</label><input name="admin_email" type="email" required></div>
+        <div class="field"><label>首位管理员初始密码（至少 12 位）</label><input name="admin_password" type="password" minlength="12" required></div>
+        <div class="field" style="align-self:end"><button class="btn" type="submit">创建租户</button></div>
+      </form>
+    </section>
+    <div class="layout">
+      <aside class="stack">
+        <div class="card">
+          <h2>工作空间</h2>
+          <div class="field"><label>当前租户</label><select id="tenant-select"></select></div>
+          <div id="tenant-empty" class="muted hidden">当前账号还没有租户成员身份。</div>
+        </div>
+        <div id="org-panel" class="card hidden">
+          <h2>组织层级</h2>
+          <div id="unit-list" class="stack small"></div>
+          <form id="unit-form">
+            <div class="divider"></div>
+            <div class="field"><label>新组织单元</label><input name="name" required></div>
+            <div class="field"><label>父级单元</label><select name="parent_id" id="unit-parent"></select></div>
+            <button class="btn secondary" type="submit">添加单元</button>
+          </form>
+        </div>
+        <div class="card">
+          <div class="section-head"><h2>知识库</h2><span id="kb-count" class="metric"></span></div>
+          <div id="kb-list" class="kb-list"></div>
+          <div id="kb-empty" class="muted hidden">还没有可访问的知识库。</div>
+          <form id="kb-form" class="hidden">
+            <div class="divider"></div>
+            <div class="field"><label>知识库名称</label><input name="name" required></div>
+            <div class="field"><label>范围（留空为租户共享）</label><select name="unit_id" id="kb-unit"></select></div>
+            <div class="field"><label>简介</label><textarea name="description" style="min-height:70px"></textarea></div>
+            <button class="btn secondary" type="submit">创建知识库</button>
+          </form>
+        </div>
+      </aside>
+      <section class="stack">
+        <div id="tenant-admin-panel" class="card hidden">
+          <div class="section-head"><div><h2>成员管理</h2><div class="muted">按角色和组织单元分配访问范围。</div></div></div>
+          <div id="user-list" class="stack small"></div>
+          <form id="user-form">
+            <div class="two">
+              <div class="field"><label>姓名</label><input name="display_name" required></div>
+              <div class="field"><label>邮箱</label><input name="email" type="email" required></div>
+              <div class="field"><label>初始密码（至少 12 位）</label><input name="password" type="password" minlength="12" required></div>
+              <div class="field"><label>角色</label><select name="role" id="user-role"><option value="member">普通用户</option><option value="unit_admin">组织单元管理员</option><option value="tenant_admin">租户管理员</option></select></div>
+              <div class="field"><label>组织单元</label><select name="unit_id" id="user-unit" required></select></div>
+            </div>
+            <button class="btn secondary" type="submit">添加成员</button>
+          </form>
+        </div>
+        <div class="card">
+          <div class="section-head"><div><h2 id="active-kb-title">选择一个知识库</h2><div id="active-kb-desc" class="muted">资料会按租户与组织权限隔离。</div></div><span id="doc-count" class="metric"></span></div>
+          <div id="kb-editor" class="hidden">
+            <div class="two">
+              <div>
+                <h3>导入资料</h3>
+                <form id="document-form">
+                  <div class="field"><label>文档标题</label><input name="title" required></div>
+                  <div class="field"><label>选择 .txt 或 .md（也可直接粘贴内容）</label><input id="document-file" type="file" accept=".txt,.md,text/plain,text/markdown"></div>
+                  <div class="field"><label>正文</label><textarea name="content" required placeholder="粘贴 UTF-8 文本或 Markdown 内容"></textarea></div>
+                  <button class="btn" type="submit">索引文档</button>
+                </form>
+              </div>
+              <div>
+                <h3>已导入文档</h3>
+                <div id="document-list" class="muted">选择知识库查看文档。</div>
+              </div>
+            </div>
+            <div class="divider"></div>
+            <div class="two">
+              <div>
+                <h3>知识问答 · RAG</h3>
+                <form id="ask-form">
+                  <div class="field"><label>问题</label><textarea name="question" style="min-height:90px" required placeholder="仅根据当前知识库资料回答……"></textarea></div>
+                  <button class="btn" type="submit">提问并查看引用</button>
+                </form>
+              </div>
+              <div>
+                <h3>回答</h3>
+                <div id="answer" class="answer muted">回答会附带来源片段；没有资料支撑时会说明资料不足。</div>
+                <div id="citations"></div>
+                <div id="run-metrics" class="metric"></div>
+              </div>
+            </div>
+            <div class="divider"></div>
+            <div class="section-head"><div><h3>LLM Wiki · 知识图谱</h3><div class="muted">生成结果先作为草稿；管理员审核发布后，普通成员可见。</div></div><div class="actions"><button id="wiki-refresh" class="btn secondary" type="button">从资料生成草稿</button><button id="wiki-publish" class="btn ghost hidden" type="button">管理员发布</button></div></div>
+            <div id="wiki-status" class="metric" style="margin:12px 0"></div>
+            <div id="wiki-nodes" class="wiki-grid"></div>
+            <div id="wiki-edges" class="edges"></div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </section>
+</main>
+<div id="toast" class="toast hidden"></div>
+<script>
+(function(){
+  var token = sessionStorage.getItem("kw_token") || "";
+  var user = null;
+  var memberships = [];
+  var activeTenant = "";
+  var activeKb = "";
+  var units = [];
+  var kbs = [];
+  var timer = null;
+
+  function byId(id){ return document.getElementById(id); }
+  function esc(value){
+    return String(value == null ? "" : value).replace(/[&<>"']/g, function(ch){
+      return {"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[ch];
+    });
+  }
+  function flash(message, isError){
+    var box = byId("toast");
+    box.textContent = message;
+    box.className = "toast";
+    if(isError) box.style.background = "#8b3434"; else box.style.background = "#143745";
+    clearTimeout(timer);
+    timer = setTimeout(function(){box.className="toast hidden";}, 3800);
+  }
+  function showNotice(message, isError){
+    var box = byId("notice");
+    box.textContent = message;
+    box.className = "status" + (isError ? " error" : " ok");
+    box.classList.remove("hidden");
+  }
+  function hideNotice(){ byId("notice").classList.add("hidden"); }
+  async function api(path, options){
+    options = options || {};
+    var headers = options.headers || {};
+    if(token) headers.Authorization = "Bearer " + token;
+    if(options.body && typeof options.body !== "string"){ headers["Content-Type"] = "application/json"; options.body = JSON.stringify(options.body); }
+    options.headers = headers;
+    var response = await fetch("/api/v1" + path, options);
+    var body = {};
+    try { body = await response.json(); } catch(_e) {}
+    if(!response.ok) throw new Error(body.detail || ("Request failed (" + response.status + ")"));
+    return body;
+  }
+  function formObject(form){
+    var result = {};
+    new FormData(form).forEach(function(value,key){ result[key] = typeof value === "string" ? value.trim() : value; });
+    return result;
+  }
+  function roleLabel(role){ return ({platform_admin:"平台管理员",tenant_admin:"租户管理员",unit_admin:"组织单元管理员",member:"普通用户"})[role] || role; }
+  function selectedMembership(){
+    return memberships.find(function(item){return item.tenant_id === activeTenant;}) || null;
+  }
+  function isAdmin(){
+    var m = selectedMembership();
+    return !!m && (m.role === "tenant_admin" || m.role === "unit_admin");
+  }
+  function isTenantAdmin(){ var m=selectedMembership(); return !!m && m.role === "tenant_admin"; }
+
+  async function start(){
+    if(!token){showLogin();return;}
+    try{
+      var data = await api("/me");
+      user = data.user;
+      memberships = data.memberships || [];
+      byId("login-view").classList.add("hidden");
+      byId("app-view").classList.remove("hidden");
+      byId("logout").classList.remove("hidden");
+      byId("who").textContent = user.display_name + " · " + (user.is_platform_admin ? "平台管理员" : user.email);
+      byId("platform-panel").classList.toggle("hidden", !user.is_platform_admin);
+      var select = byId("tenant-select");
+      select.innerHTML = memberships.map(function(m){return '<option value="' + esc(m.tenant_id) + '">' + esc(m.tenant_name) + ' · ' + esc(roleLabel(m.role)) + '</option>';}).join("");
+      if(memberships.length){
+        activeTenant = memberships[0].tenant_id;
+        select.value = activeTenant;
+        await loadTenant();
+      }else{
+        activeTenant = "";
+        byId("tenant-empty").classList.remove("hidden");
+        byId("tenant-badge").textContent = "平台管理";
+        clearTenantPanels();
+      }
+    }catch(error){
+      token = "";
+      sessionStorage.removeItem("kw_token");
+      showLogin(error.message);
+    }
+  }
+  function showLogin(message){
+    byId("login-view").classList.remove("hidden");
+    byId("app-view").classList.add("hidden");
+    byId("logout").classList.add("hidden");
+    if(message){byId("login-error").textContent=message;byId("login-error").classList.remove("hidden");}
+  }
+  function clearTenantPanels(){
+    byId("org-panel").classList.add("hidden");
+    byId("tenant-admin-panel").classList.add("hidden");
+    byId("kb-form").classList.add("hidden");
+    byId("kb-list").innerHTML="";
+    byId("kb-editor").classList.add("hidden");
+  }
+  async function loadTenant(){
+    if(!activeTenant){clearTenantPanels();return;}
+    hideNotice();
+    var membership = selectedMembership();
+    byId("tenant-empty").classList.add("hidden");
+    byId("tenant-badge").textContent = membership ? membership.tenant_name : "";
+    byId("org-panel").classList.toggle("hidden", !isAdmin());
+    byId("tenant-admin-panel").classList.toggle("hidden", !isAdmin());
+    byId("kb-form").classList.toggle("hidden", !isAdmin());
+    byId("wiki-refresh").classList.toggle("hidden", !isAdmin());
+    byId("wiki-publish").classList.toggle("hidden", !isAdmin());
+    try{
+      var results = await Promise.all([
+        api("/tenants/" + activeTenant + "/org-units"),
+        api("/tenants/" + activeTenant + "/knowledge-bases"),
+        api("/tenants/" + activeTenant + "/users")
+      ]);
+      units = results[0]; kbs = results[1];
+      renderUnits(); renderKbs(); renderUsers(results[2]);
+      if(activeKb && !kbs.some(function(kb){return kb.id===activeKb;})) activeKb="";
+      if(!activeKb && kbs.length) activeKb=kbs[0].id;
+      if(activeKb) await loadKnowledgeBase(); else byId("kb-editor").classList.add("hidden");
+      configureRoleChoices();
+    }catch(error){showNotice(error.message,true);}
+  }
+  function renderUnits(){
+    var unitMap = {};
+    units.forEach(function(unit){unitMap[unit.id]=unit;});
+    function depth(unit){
+      var count=0, parent=unit.parent_id, seen={};
+      while(parent && unitMap[parent] && !seen[parent]){seen[parent]=true;count++;parent=unitMap[parent].parent_id;}
+      return count;
+    }
+    var options = units.map(function(unit){
+      var prefix = "　".repeat(Math.min(depth(unit),5));
+      return '<option value="' + esc(unit.id) + '">' + prefix + esc(unit.name) + '</option>';
+    }).join("");
+    byId("unit-list").innerHTML = units.map(function(unit){
+      var parent=unit.parent_id && unitMap[unit.parent_id] ? " · 上级：" + unitMap[unit.parent_id].name : " · 根节点";
+      return '<div class="doc-row"><span>' + esc("　".repeat(Math.min(depth(unit),5)) + unit.name) + '</span><span class="muted">' + esc(parent) + '</span></div>';
+    }).join("") || '<div class="muted">无可见组织单元</div>';
+    byId("unit-parent").innerHTML = '<option value="">根节点</option>' + options;
+    byId("kb-unit").innerHTML = '<option value="">租户共享</option>' + options;
+    byId("user-unit").innerHTML = '<option value="">请选择</option>' + options;
+  }
+  function renderUsers(rows){
+    byId("user-list").innerHTML = rows.map(function(row){
+      var unit = units.find(function(item){return item.id===row.unit_id;});
+      return '<div class="doc-row"><span><strong>' + esc(row.display_name) + '</strong><br><span class="muted">' + esc(row.email) + '</span></span><span class="tag">' + esc(roleLabel(row.role)) + (unit ? " · " + esc(unit.name) : "") + '</span></div>';
+    }).join("") || '<div class="muted">暂无成员</div>';
+  }
+  function configureRoleChoices(){
+    var role = byId("user-role");
+    if(!role) return;
+    if(selectedMembership() && selectedMembership().role === "unit_admin"){
+      role.innerHTML='<option value="member">普通用户</option>';
+    }else{
+      role.innerHTML='<option value="member">普通用户</option><option value="unit_admin">组织单元管理员</option><option value="tenant_admin">租户管理员</option>';
+    }
+  }
+  function renderKbs(){
+    byId("kb-count").textContent = kbs.length + " 个知识库";
+    byId("kb-empty").classList.toggle("hidden", kbs.length>0);
+    byId("kb-list").innerHTML = kbs.map(function(kb){
+      return '<button type="button" class="kb-item ' + (kb.id===activeKb ? "active" : "") + '" data-kb="' + esc(kb.id) + '"><strong>' + esc(kb.name) + '</strong><span class="muted">' + esc(kb.unit_name) + ' · ' + esc(kb.documents) + ' 份文档</span></button>';
+    }).join("");
+    byId("kb-list").querySelectorAll("[data-kb]").forEach(function(button){
+      button.addEventListener("click",async function(){activeKb=button.getAttribute("data-kb");renderKbs();await loadKnowledgeBase();});
+    });
+  }
+  function renderDocuments(rows){
+    byId("doc-count").textContent = rows.length + " 份文档";
+    byId("document-list").innerHTML = rows.map(function(row){
+      var tagClass = row.status==="failed" ? "tag failed" : "tag";
+      return '<div class="doc-row"><span>' + esc(row.title) + '<br><span class="muted">' + esc(row.source_name || "文本输入") + '</span></span><span class="' + tagClass + '">' + esc(row.status) + '</span></div>';
+    }).join("") || '<div class="muted">暂无文档</div>';
+  }
+  async function loadKnowledgeBase(){
+    var kb = kbs.find(function(item){return item.id===activeKb;});
+    if(!kb){byId("kb-editor").classList.add("hidden");return;}
+    byId("kb-editor").classList.remove("hidden");
+    byId("active-kb-title").textContent=kb.name;
+    byId("active-kb-desc").textContent=kb.description || kb.unit_name;
+    var canWrite=isAdmin();
+    byId("document-form").classList.toggle("hidden",!canWrite);
+    try{
+      var documents=await api("/tenants/"+activeTenant+"/knowledge-bases/"+activeKb+"/documents");
+      renderDocuments(documents);
+      var wiki=await api("/tenants/"+activeTenant+"/knowledge-bases/"+activeKb+"/wiki");
+      renderWiki(wiki);
+    }catch(error){showNotice(error.message,true);}
+    renderKbs();
+  }
+  function renderWiki(graph){
+    byId("wiki-status").textContent=graph.nodes.length+" 个节点 · "+graph.edges.length+" 条关系";
+    byId("wiki-nodes").innerHTML=graph.nodes.map(function(node){
+      var sourceText=(node.sources||[]).map(function(source){return source.title+" · "+source.chunk_id;}).join("；");
+      return '<article class="wiki-node"><strong>'+esc(node.name)+' <span class="tag">'+esc(node.kind)+'</span></strong><div class="muted">'+esc(node.summary)+'</div><div class="small muted" style="margin-top:8px">来源：'+esc(sourceText||"未关联来源")+'</div></article>';
+    }).join("") || '<div class="muted">尚无 Wiki 节点。先索引文档，再生成草稿。</div>';
+    var map={};graph.nodes.forEach(function(node){map[node.id]=node.name;});
+    byId("wiki-edges").innerHTML=graph.edges.map(function(edge){
+      return '<div class="edge">'+esc(map[edge.source]||"未知实体")+' <strong>— '+esc(edge.label)+' →</strong> '+esc(map[edge.target]||"未知实体")+'</div>';
+    }).join("");
+  }
+  byId("login-form").addEventListener("submit",async function(event){
+    event.preventDefault();byId("login-error").classList.add("hidden");
+    try{
+      var body=formObject(event.currentTarget);
+      var data=await fetch("/api/v1/auth/token",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(body)}).then(async function(r){var j=await r.json();if(!r.ok)throw new Error(j.detail||"登录失败");return j;});
+      token=data.access_token;sessionStorage.setItem("kw_token",token);await start();
+    }catch(error){showLogin(error.message);}
+  });
+  byId("logout").addEventListener("click",function(){sessionStorage.removeItem("kw_token");token="";activeTenant="";activeKb="";showLogin();});
+  byId("tenant-select").addEventListener("change",async function(){activeTenant=this.value;activeKb="";await loadTenant();});
+  byId("tenant-form").addEventListener("submit",async function(event){
+    event.preventDefault();
+    try{var data=await api("/tenants",{method:"POST",body:formObject(event.currentTarget)});event.currentTarget.reset();showNotice("租户已创建。首位管理员："+data.admin.email+"；请使用该管理员账号重新登录。");}
+    catch(error){showNotice(error.message,true);}
+  });
+  byId("unit-form").addEventListener("submit",async function(event){
+    event.preventDefault();
+    try{await api("/tenants/"+activeTenant+"/org-units",{method:"POST",body:formObject(event.currentTarget)});event.currentTarget.reset();await loadTenant();flash("组织单元已添加。");}
+    catch(error){showNotice(error.message,true);}
+  });
+  byId("user-form").addEventListener("submit",async function(event){
+    event.preventDefault();
+    try{await api("/tenants/"+activeTenant+"/users",{method:"POST",body:formObject(event.currentTarget)});event.currentTarget.reset();await loadTenant();flash("成员已添加。");}
+    catch(error){showNotice(error.message,true);}
+  });
+  byId("kb-form").addEventListener("submit",async function(event){
+    event.preventDefault();
+    try{var data=await api("/tenants/"+activeTenant+"/knowledge-bases",{method:"POST",body:formObject(event.currentTarget)});event.currentTarget.reset();await loadTenant();activeKb=data.id;renderKbs();await loadKnowledgeBase();flash("知识库已创建。");}
+    catch(error){showNotice(error.message,true);}
+  });
+  byId("document-form").addEventListener("submit",async function(event){
+    event.preventDefault();
+    try{
+      var values=formObject(event.currentTarget);
+      var file=byId("document-file").files[0];
+      if(file){values.content=await file.text();values.source_name=file.name;}
+      if(!values.content)throw new Error("请提供文档正文或选择文件。");
+      var result=await api("/tenants/"+activeTenant+"/knowledge-bases/"+activeKb+"/documents",{method:"POST",body:values});
+      event.currentTarget.reset();await loadKnowledgeBase();flash("文档已索引，共 "+result.chunks+" 个片段。");
+    }catch(error){showNotice(error.message,true);}
+  });
+  byId("ask-form").addEventListener("submit",async function(event){
+    event.preventDefault();byId("answer").textContent="正在检索并生成回答…";byId("citations").innerHTML="";
+    try{
+      var result=await api("/tenants/"+activeTenant+"/knowledge-bases/"+activeKb+"/ask",{method:"POST",body:formObject(event.currentTarget)});
+      byId("answer").textContent=result.answer;
+      byId("citations").innerHTML=result.citations.map(function(citation){
+        return '<div class="citation"><strong>['+esc(citation.source)+'] '+esc(citation.title)+' · 片段 '+esc(citation.chunk)+'</strong><div class="muted">'+esc(citation.excerpt)+'</div></div>';
+      }).join("");
+      byId("run-metrics").textContent="检索片段 "+result.metrics.retrieved+" · 引用覆盖率 "+result.metrics.citation_coverage+" · 耗时 "+(result.metrics.latency_ms||0)+" ms";
+    }catch(error){byId("answer").textContent=error.message;}
+  });
+  byId("wiki-refresh").addEventListener("click",async function(){
+    try{var result=await api("/tenants/"+activeTenant+"/knowledge-bases/"+activeKb+"/wiki/refresh",{method:"POST"});showNotice("Wiki 草稿已生成："+result.entities+" 个实体、"+result.relations+" 条关系。");await loadKnowledgeBase();}
+    catch(error){showNotice(error.message,true);}
+  });
+  byId("wiki-publish").addEventListener("click",async function(){
+    try{var result=await api("/tenants/"+activeTenant+"/knowledge-bases/"+activeKb+"/wiki/publish",{method:"POST"});showNotice("已发布 "+result.entities_published+" 个实体和 "+result.relations_published+" 条关系。");await loadKnowledgeBase();}
+    catch(error){showNotice(error.message,true);}
+  });
+  start();
+})();
+</script>
+</body>
+</html>
