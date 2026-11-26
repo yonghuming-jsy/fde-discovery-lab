@@ -45,6 +45,16 @@ Use Python 3.11+, a PostgreSQL database, and a local Ollama service. Install dep
 
 Interactive API documentation is available at /docs; health status is at /healthz.
 
+## Deploy a public demo on Render
+
+The repository includes a Render Blueprint in `render.yaml`. Connect this GitHub repository to Render and deploy the Blueprint in Singapore. The API uses Render's free web service and an external PostgreSQL database; Neon is a suitable free-tier option.
+
+During setup, provide `DATABASE_URL` from the database provider, the bootstrap administrator email, and a unique password of at least 12 characters. Render generates `JWT_SECRET` automatically. Keep database credentials and passwords in the hosting dashboard, never in Git.
+
+Render's free web service sleeps after 15 minutes without traffic and can take about a minute to wake. The free Render Postgres database expires after 30 days, so this Blueprint does not create one. A free database provider still has storage and compute quotas; export or back up important data.
+
+RAG indexing, AI answers, and Wiki graph generation require an Ollama endpoint reachable from Render. `localhost` and the Docker Compose-only hostname `ollama` are not reachable from the hosted service. Add `OLLAMA_BASE_URL`, `OLLAMA_CHAT_MODEL`, and `OLLAMA_EMBED_MODEL` in Render after providing a reachable Ollama host. The API and account console can run without those AI settings.
+
 ## Roles and scope
 
 | Role | Scope |
