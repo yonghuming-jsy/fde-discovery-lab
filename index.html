@@ -2,325 +2,592 @@
 <html lang="zh-CN">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="theme-color" content="#f5f6f4">
-  <meta name="description" content="FDE Discovery Lab 多租户知识库 SaaS 方案实战课件，含 RAG、权限、Ollama、ROI 与交付清单互动测算。">
-  <title>FDE 知库助手 · 项目方案实战课件</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#101c2b">
+  <meta name="description" content="FDE Discovery Lab：围绕真实客户场景练习机会判断、需求发现、方案设计、ROI测算与交付交接。">
+  <title>FDE Discovery Lab · 客户场景实战</title>
   <style>
     :root {
-      color-scheme: light dark;
-      --bg:#f5f6f4; --surface:#fff; --surface2:#eef1ee; --ink:#1b2220; --ink2:#4c5852; --ink3:#75827b;
-      --line:#d9ded9; --line2:#c6cec7; --red:#b3271e; --red-soft:#fbeae8; --teal:#0d6e5f; --teal-soft:#e3f2ee;
-      --amber:#9a6206; --amber-soft:#faf0da; --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
-      --sans:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",system-ui,sans-serif;
-      --serif:"Songti SC","STSong","SimSun",serif;
+      color-scheme: light;
+      --ink: #182535;
+      --muted: #657386;
+      --muted-2: #8894a2;
+      --line: #e1e7ed;
+      --paper: #f4f7fa;
+      --surface: #fff;
+      --navy: #101c2b;
+      --navy-2: #17283b;
+      --cyan: #72d4ca;
+      --cyan-dark: #146e70;
+      --orange: #efaa55;
+      --orange-dark: #a86315;
+      --green: #227b65;
+      --shadow: 0 14px 40px rgba(20, 40, 60, .08);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
     }
-    @media(prefers-color-scheme:dark){:root{--bg:#141816;--surface:#1d2320;--surface2:#252c28;--ink:#e8ece9;--ink2:#aebbb3;--ink3:#84928a;--line:#333b36;--line2:#454f48;--red:#ff7a6e;--red-soft:#3a2320;--teal:#4cc3ab;--teal-soft:#17332c;--amber:#e0aa4e;--amber-soft:#38300f}}
-    *{box-sizing:border-box}html{scroll-behavior:smooth;scroll-padding-top:88px}body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:16px;line-height:1.72;-webkit-font-smoothing:antialiased}
-    h1,h2,h3,h4,p,ul,ol,figure{margin:0}button,input,select{font:inherit}button{cursor:pointer}a{color:var(--teal)}.wrap{width:min(1100px,100%);margin:0 auto;padding:0 22px}.mono{font-family:var(--mono);font-variant-numeric:tabular-nums}.small{font-size:.88rem;color:var(--ink2)}
-    .hero{padding:46px 22px 14px}.topline{display:flex;align-items:center;gap:10px;flex-wrap:wrap;color:var(--ink3);font-size:.78rem;letter-spacing:.08em}.topline strong{color:var(--teal);font-weight:800}.demo{border:1px solid var(--line2);border-radius:999px;padding:3px 9px;letter-spacing:0;background:var(--surface);color:var(--ink2)}
-    h1{font-family:var(--serif);font-size:clamp(2rem,5vw,3.25rem);line-height:1.23;letter-spacing:.01em;margin:16px 0 12px;font-weight:900;max-width:880px}h1 em{font-style:normal;color:var(--red)}.lede{max-width:760px;color:var(--ink2);font-size:1.06rem}.goals{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:11px;margin:24px 0 3px}.goal{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:13px 15px}.goal b{display:block;color:var(--red);font:600 .82rem var(--mono)}.goal span{font-size:.92rem}
-    nav.chapters{position:sticky;top:0;z-index:30;background:color-mix(in srgb,var(--bg) 92%,transparent);backdrop-filter:blur(10px);border-block:1px solid var(--line);padding:9px 0;margin-top:18px}.chapters .wrap{display:flex;gap:7px;overflow-x:auto;scrollbar-width:thin}.chapters a{white-space:nowrap;text-decoration:none;display:inline-flex;align-items:center;min-height:36px;padding:4px 11px;border:1px solid var(--line2);border-radius:999px;background:var(--surface);color:var(--ink);font-size:.83rem}.chapters a:hover,.chapters a.active{border-color:var(--teal);color:var(--teal)}.chapters .n{font:600 .77rem var(--mono);color:var(--red);margin-right:6px}
-    main{padding-bottom:44px}section{padding:43px 0 9px;scroll-margin-top:72px}.sec-head{display:flex;align-items:baseline;gap:13px;border-bottom:2px solid var(--ink);padding-bottom:10px;margin-bottom:21px}.sec-head .no{font:600 .98rem var(--mono);color:var(--red)}.sec-head h2{font:900 clamp(1.4rem,3.4vw,2rem)/1.3 var(--serif)}.sec-head .en{margin-left:auto;color:var(--ink3);font: .75rem var(--mono);letter-spacing:.08em;text-align:right}h3{font-size:1.12rem;font-weight:850;margin:25px 0 9px}h4{font-size:.98rem;font-weight:750;margin:16px 0 6px}p.body{max-width:58em;margin:0 0 12px}.muted{color:var(--ink2)}
-    .grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}.grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.card{background:var(--surface);border:1px solid var(--line);border-radius:11px;padding:16px 18px}.card h3,.card h4{margin-top:0}.card h3{font-size:1.02rem}.tag{display:inline-block;background:var(--teal-soft);color:var(--teal);border-radius:4px;padding:1px 8px;font-size:.74rem;font-weight:750;margin-bottom:7px}.tag.red{background:var(--red-soft);color:var(--red)}.tag.amber{background:var(--amber-soft);color:var(--amber)}
-    .callout{padding:13px 16px;border-radius:9px;margin:13px 0;font-size:.93rem}.callout.red{background:var(--red-soft)}.callout.teal{background:var(--teal-soft)}.callout.amber{background:var(--amber-soft)}.callout b{display:block;margin-bottom:2px}.callout.red b{color:var(--red)}.callout.teal b{color:var(--teal)}.callout.amber b{color:var(--amber)}
-    .steps{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px;margin:14px 0}.step{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:12px}.step .sn{display:block;font:600 .78rem var(--mono);color:var(--red);margin-bottom:3px}.step p{font-size:.88rem;color:var(--ink2)}
-    .blocks{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px;margin:14px 0}.block{background:var(--surface);border:1px solid var(--line);border-top:4px solid var(--teal);border-radius:8px;padding:12px}.block.red{border-top-color:var(--red)}.block .bn{font:.75rem var(--mono);color:var(--ink3)}.block h4{margin:2px 0 5px}.block p{font-size:.85rem;color:var(--ink2)}
-    .tblwrap{overflow-x:auto;margin:12px 0;border:1px solid var(--line);border-radius:9px;background:var(--surface)}table{width:100%;border-collapse:collapse;min-width:590px;font-size:.89rem}th,td{padding:9px 12px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}th{background:var(--surface2);font-weight:750;white-space:nowrap}tr:last-child td{border-bottom:0}.right{text-align:right}
-    .formula{background:var(--surface);border:1px solid var(--line2);border-radius:9px;padding:13px 16px;margin:12px 0;font: .92rem/1.9 var(--mono);overflow:auto;white-space:nowrap}.formula small{font: .82rem/1.55 var(--sans);color:var(--ink3);white-space:normal}
-    .calc{background:var(--surface);border:1px solid var(--line2);border-radius:12px;padding:18px;margin:14px 0}.calc-title{font-weight:850;font-size:1.04rem;display:flex;align-items:center;gap:9px;margin-bottom:3px}.calc-title:before{content:"";width:9px;height:9px;border-radius:50%;background:var(--red);flex:none}.calc-desc{font-size:.87rem;color:var(--ink2);margin-bottom:12px}.fields{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:11px 14px}.field label{display:block;font-size:.81rem;font-weight:750;color:var(--ink2);margin-bottom:4px}.field input,.field select{width:100%;min-height:40px;padding:7px 9px;border:1px solid var(--line2);border-radius:7px;background:var(--bg);color:var(--ink);font-family:var(--mono);font-size:.91rem}.field select{font-family:var(--sans)}.results{display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:9px;margin-top:14px}.result{background:var(--surface2);border-radius:8px;padding:10px 12px}.result .rl{font-size:.76rem;color:var(--ink2);font-weight:750}.result .rv{font:600 1.2rem var(--mono);margin-top:2px}.result .rv.red{color:var(--red)}.result .rs{font-size:.75rem;color:var(--ink3)}.verdict{margin-top:12px;border-radius:8px;padding:11px 14px;background:var(--teal-soft);font-size:.9rem}.verdict.warn{background:var(--amber-soft)}
-    .matrix{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px;margin:12px 0}.matrix .card{padding:13px}.matrix strong{display:block;color:var(--teal);font-size:.9rem;margin-bottom:3px}.matrix p{font-size:.84rem;color:var(--ink2)}
-    .graph{display:grid;grid-template-columns:1fr auto 1fr auto 1fr;align-items:center;gap:9px;margin:14px 0;padding:16px;background:var(--surface2);border-radius:10px}.node{border:1px solid var(--line2);background:var(--surface);border-radius:9px;padding:12px 9px;text-align:center;font-size:.86rem;font-weight:750}.node.main{border-color:var(--teal);color:var(--teal)}.arrow{color:var(--red);font:700 1.1rem var(--mono)}
-    .checklist{list-style:none;padding:0;margin:10px 0}.checklist li{padding:8px 4px;border-bottom:1px dashed var(--line);display:flex;gap:10px;align-items:flex-start}.checklist li:last-child{border:0}.checklist input{margin-top:5px;accent-color:var(--teal);width:17px;height:17px;flex:none}.checklist label{font-size:.92rem;cursor:pointer}.check-progress{font-size:.83rem;color:var(--ink2);margin-top:9px}
-    .button{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:38px;padding:6px 13px;border:1px solid var(--teal);border-radius:7px;background:var(--teal);color:#fff;font-size:.86rem;font-weight:750}.button.ghost{background:transparent;color:var(--teal)}.button:hover{filter:brightness(1.08)}.button:active{transform:translateY(1px)}.dl{display:flex;flex-wrap:wrap;gap:8px;margin:13px 0}.foot{border-top:1px solid var(--line);margin-top:38px;padding:17px 0 28px;color:var(--ink3);font-size:.8rem;display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap}.toast{position:fixed;right:18px;bottom:18px;z-index:40;padding:10px 14px;border-radius:9px;background:var(--ink);color:var(--bg);font-size:.85rem;box-shadow:0 12px 32px #0002;opacity:0;transform:translateY(8px);transition:.2s;pointer-events:none}.toast.show{opacity:1;transform:none}
-    @media(max-width:800px){.grid3{grid-template-columns:repeat(2,minmax(0,1fr))}.blocks{grid-template-columns:repeat(2,minmax(0,1fr))}.steps{grid-template-columns:repeat(2,minmax(0,1fr))}.matrix{grid-template-columns:1fr}.graph{grid-template-columns:1fr}.arrow{transform:rotate(90deg);text-align:center}.sec-head .en{display:none}}
-    @media(max-width:520px){.wrap{padding-inline:16px}.hero{padding-top:31px}.grid2,.grid3{grid-template-columns:1fr}.goal{padding:11px}.card,.calc{padding:14px}.chapters a{font-size:.79rem;padding-inline:9px}.sec-head{gap:9px}.foot{display:block}.foot span{display:block;margin:4px 0}}
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body { margin: 0; background: var(--paper); color: var(--ink); font-size: 16px; line-height: 1.55; }
+    button, input, textarea, select { font: inherit; }
+    button { cursor: pointer; }
+    .app-shell { min-height: 100vh; }
+    .topbar {
+      height: 72px; padding: 0 max(26px, calc((100vw - 1440px) / 2));
+      background: var(--navy); color: #f6f8fa; display: flex; align-items: center;
+      justify-content: space-between; gap: 24px; border-bottom: 1px solid rgba(255,255,255,.1);
+    }
+    .brand { display: flex; align-items: center; gap: 12px; min-width: 230px; }
+    .brand-mark { width: 35px; height: 35px; display: grid; place-items: center; border-radius: 10px; background: var(--cyan); color: var(--navy); font-weight: 900; letter-spacing: -.06em; }
+    .brand-name { font-size: .96rem; font-weight: 800; letter-spacing: .01em; }
+    .brand-caption { color: #a9b6c5; font-size: .68rem; letter-spacing: .15em; text-transform: uppercase; }
+    .topbar-right { display: flex; align-items: center; gap: 18px; color: #b8c4d1; font-size: .81rem; }
+    .live-badge { border: 1px solid rgba(114,212,202,.34); color: var(--cyan); border-radius: 999px; padding: 5px 10px; font-size: .73rem; letter-spacing: .04em; }
+    .user-dot { width: 30px; height: 30px; display: grid; place-items: center; background: #30445a; color: #eaf3f5; border-radius: 50%; font-weight: 800; }
+    .page { max-width: 1440px; margin: 0 auto; padding: 38px 28px 60px; }
+    .intro { display: flex; align-items: flex-end; justify-content: space-between; gap: 30px; margin: 0 0 24px; }
+    .eyebrow { color: var(--cyan-dark); font-size: .73rem; font-weight: 850; letter-spacing: .14em; text-transform: uppercase; }
+    h1 { margin: 7px 0 8px; font-size: clamp(2rem, 3.6vw, 3.35rem); line-height: 1.06; letter-spacing: -.055em; color: var(--navy); }
+    .intro p { max-width: 760px; margin: 0; color: var(--muted); font-size: 1.02rem; }
+    .intro-actions { display: flex; gap: 9px; flex: none; }
+    .btn { min-height: 42px; border: 1px solid var(--line); background: var(--surface); color: var(--ink); border-radius: 8px; padding: 9px 14px; font-weight: 750; font-size: .84rem; transition: .18s ease; }
+    .btn:hover { border-color: #aebcc9; transform: translateY(-1px); }
+    .btn.primary { background: var(--navy); color: white; border-color: var(--navy); }
+    .btn.primary:hover { background: #20364d; }
+    .btn.accent { background: var(--cyan); color: var(--navy); border-color: var(--cyan); }
+    .btn.small { min-height: 34px; padding: 6px 10px; font-size: .76rem; }
+    .case-strip { display: grid; grid-template-columns: 1.1fr 1fr 1fr 1fr; gap: 0; background: var(--navy-2); color: white; border-radius: 13px; overflow: hidden; box-shadow: var(--shadow); margin-bottom: 20px; }
+    .case-cell { min-height: 89px; padding: 16px 20px; border-right: 1px solid rgba(255,255,255,.1); display: flex; flex-direction: column; justify-content: center; }
+    .case-cell:last-child { border: 0; }
+    .case-label { color: #9eafc0; text-transform: uppercase; letter-spacing: .12em; font-size: .66rem; font-weight: 800; }
+    .case-value { margin-top: 5px; font-size: 1rem; font-weight: 800; }
+    .case-value.case-name { font-size: 1.2rem; letter-spacing: -.02em; }
+    .case-sub { color: #c0cbd5; font-size: .77rem; margin-top: 1px; }
+    .progress-wrap { margin-top: 9px; width: 100%; display: flex; align-items: center; gap: 9px; }
+    .progress-track { height: 5px; background: rgba(255,255,255,.18); border-radius: 9px; overflow: hidden; flex: 1; }
+    .progress-fill { height: 100%; width: 0; background: var(--cyan); border-radius: inherit; transition: width .25s; }
+    .progress-text { font-size: .72rem; color: #d4dce4; white-space: nowrap; }
+    .stage-tabs { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 8px; margin-bottom: 21px; }
+    .stage-tab { position: relative; display: flex; align-items: center; gap: 11px; min-height: 76px; padding: 13px 15px; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); color: var(--muted); text-align: left; transition: .18s; }
+    .stage-tab:hover { border-color: #a8c5c2; box-shadow: 0 5px 15px rgba(20,50,70,.05); }
+    .stage-tab.active { border-color: var(--cyan-dark); box-shadow: inset 0 0 0 1px var(--cyan-dark); color: var(--navy); }
+    .stage-tab.done .stage-number { background: #e1f3ee; color: var(--green); }
+    .stage-number { flex: none; display: grid; place-items: center; width: 31px; height: 31px; border-radius: 50%; background: #edf1f5; color: #617083; font-size: .72rem; font-weight: 850; }
+    .stage-name { display: block; font-size: .85rem; font-weight: 850; color: var(--ink); }
+    .stage-en { display: block; margin-top: 1px; color: var(--muted-2); font-size: .66rem; letter-spacing: .06em; }
+    .workspace { display: grid; grid-template-columns: minmax(0, 1fr) 304px; gap: 18px; align-items: start; }
+    .main-panel, .side-panel { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; box-shadow: 0 7px 25px rgba(20,40,60,.035); }
+    .main-panel { padding: 25px; }
+    .panel-heading { display: flex; align-items: flex-start; justify-content: space-between; gap: 20px; border-bottom: 1px solid var(--line); padding-bottom: 18px; margin-bottom: 19px; }
+    .panel-stage { font-size: .68rem; font-weight: 850; letter-spacing: .13em; color: var(--orange-dark); text-transform: uppercase; }
+    h2 { margin: 5px 0 5px; color: var(--navy); font-size: 1.55rem; line-height: 1.2; letter-spacing: -.035em; }
+    .panel-heading p { max-width: 700px; margin: 0; color: var(--muted); font-size: .9rem; }
+    .stage-chip { flex: none; padding: 6px 10px; border-radius: 6px; background: #f0f7f6; color: var(--cyan-dark); font-size: .72rem; font-weight: 800; }
+    .objective { padding: 14px 16px; margin-bottom: 18px; border-left: 3px solid var(--orange); background: #fff8ee; border-radius: 0 8px 8px 0; color: #70491e; font-size: .87rem; }
+    .objective strong { color: #513719; }
+    .section-label { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; margin: 22px 0 11px; }
+    .section-label h3 { margin: 0; font-size: .96rem; color: var(--navy); }
+    .section-label span { color: var(--muted-2); font-size: .73rem; }
+    .field-grid { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 12px; }
+    .field-card { border: 1px solid var(--line); border-radius: 9px; padding: 12px; background: #fff; }
+    .field-card label { display: flex; justify-content: space-between; gap: 8px; color: var(--ink); font-size: .79rem; font-weight: 820; }
+    .field-card .hint { margin: 6px 0 8px; min-height: 35px; color: var(--muted); font-size: .75rem; line-height: 1.45; }
+    .field-card textarea, .field-card input, .field-card select {
+      width: 100%; min-height: 44px; border: 1px solid #d9e0e7; border-radius: 7px; background: #fbfcfd;
+      color: var(--ink); padding: 9px 10px; outline: none; font-size: .82rem; resize: vertical;
+    }
+    .field-card textarea { min-height: 72px; }
+    .field-card textarea:focus, .field-card input:focus, .field-card select:focus { border-color: var(--cyan-dark); box-shadow: 0 0 0 3px rgba(20,110,112,.1); }
+    .field-card select { min-height: 42px; }
+    .field-card .unit { color: var(--muted-2); font-size: .69rem; font-weight: 650; }
+    .prompt-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+    .prompt-card { min-height: 88px; border: 1px solid #e5eaf0; border-radius: 8px; padding: 11px 12px; color: var(--muted); background: #fafbfd; font-size: .76rem; }
+    .prompt-card b { display: block; margin-bottom: 5px; color: var(--ink); font-size: .76rem; }
+    .formula-card { display: grid; grid-template-columns: repeat(3,1fr); gap: 9px; margin: 14px 0 3px; }
+    .metric { padding: 13px; border-radius: 8px; background: #f1f6f7; }
+    .metric:nth-child(2) { background: #f5f3fb; }
+    .metric:nth-child(3) { background: #fff5e9; }
+    .metric-label { color: var(--muted); font-size: .7rem; font-weight: 750; }
+    .metric-value { display: block; margin-top: 3px; color: var(--navy); font-size: 1.16rem; font-weight: 900; letter-spacing: -.03em; }
+    .metric-note { color: var(--muted-2); font-size: .67rem; }
+    .action-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; border-top: 1px solid var(--line); margin-top: 22px; padding-top: 17px; }
+    .action-note { color: var(--muted-2); font-size: .73rem; }
+    .action-buttons { display: flex; gap: 8px; }
+    .side-panel { padding: 19px; }
+    .side-title { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 13px; }
+    .side-title h3 { margin: 0; font-size: .91rem; color: var(--navy); }
+    .side-icon { width: 27px; height: 27px; border-radius: 8px; display: grid; place-items: center; background: #e4f4f2; color: var(--cyan-dark); font-weight: 900; }
+    .coach-copy { margin: 0 0 14px; color: var(--muted); font-size: .78rem; }
+    .coach-list { list-style: none; margin: 0; padding: 0; }
+    .coach-list li { position: relative; padding: 9px 0 9px 18px; border-top: 1px solid #edf0f3; color: #46566a; font-size: .76rem; }
+    .coach-list li:before { content: ""; position: absolute; top: 15px; left: 2px; width: 6px; height: 6px; border-radius: 50%; background: var(--orange); }
+    .evidence-box { margin-top: 16px; padding: 12px; border-radius: 9px; background: var(--navy); color: #eef4f8; }
+    .evidence-top { display: flex; align-items: center; justify-content: space-between; font-size: .76rem; font-weight: 800; }
+    .evidence-score { color: var(--cyan); font-size: 1rem; }
+    .evidence-box p { margin: 5px 0 0; color: #b7c3ce; font-size: .7rem; }
+    .mini-track { height: 4px; margin-top: 10px; background: rgba(255,255,255,.17); border-radius: 5px; overflow: hidden; }
+    .mini-track span { display: block; height: 100%; width: 0; background: var(--cyan); transition: width .2s; }
+    .evidence-count { margin-top: 7px; color: #d2dce5; font-size: .68rem; }
+    .local-note { margin-top: 14px; padding: 10px 11px; background: #f4f7fa; border-radius: 8px; color: var(--muted); font-size: .68rem; }
+    .toast { position: fixed; right: 22px; bottom: 22px; z-index: 10; padding: 11px 15px; border-radius: 8px; background: var(--navy); color: white; box-shadow: var(--shadow); font-size: .82rem; opacity: 0; transform: translateY(7px); transition: .2s; pointer-events: none; }
+    .toast.show { opacity: 1; transform: none; }
+    .footer { margin: 22px 2px 0; display: flex; justify-content: space-between; gap: 18px; color: var(--muted-2); font-size: .7rem; }
+    @media (max-width: 1020px) {
+      .workspace { grid-template-columns: 1fr; }
+      .side-panel { display: grid; grid-template-columns: 1fr 1fr; gap: 14px 20px; align-items: start; }
+      .side-panel > .side-title, .side-panel > .coach-copy, .side-panel > .coach-list { grid-column: 1; }
+      .side-panel > .evidence-box, .side-panel > .local-note { grid-column: 2; }
+      .side-panel > .evidence-box { grid-row: 1 / span 2; margin-top: 0; }
+      .side-panel > .local-note { margin-top: 0; }
+    }
+    @media (max-width: 760px) {
+      .topbar { height: 62px; padding: 0 16px; }
+      .brand { min-width: 0; }
+      .topbar-right > span:not(.live-badge) { display: none; }
+      .page { padding: 26px 15px 40px; }
+      .intro { display: block; }
+      .intro-actions { margin-top: 17px; }
+      .case-strip { grid-template-columns: repeat(2, 1fr); }
+      .case-cell:nth-child(2) { border-right: 0; }
+      .case-cell:nth-child(-n+2) { border-bottom: 1px solid rgba(255,255,255,.1); }
+      .stage-tabs { grid-template-columns: repeat(5, 150px); overflow-x: auto; padding-bottom: 4px; }
+      .stage-tab { min-height: 70px; padding: 11px; }
+      .main-panel { padding: 18px 15px; }
+      .panel-heading { display: block; }
+      .stage-chip { display: inline-block; margin-top: 10px; }
+      .side-panel { display: block; }
+      .side-panel > * { margin-top: 12px; }
+      .field-grid { grid-template-columns: 1fr; }
+      .prompt-row { grid-template-columns: 1fr; }
+      .formula-card { grid-template-columns: 1fr; }
+      .action-row, .footer { display: block; }
+      .action-buttons { margin-top: 12px; flex-wrap: wrap; }
+    }
+    @media (prefers-reduced-motion: reduce) { *, *:before, *:after { scroll-behavior: auto !important; transition: none !important; } }
   </style>
 </head>
 <body>
-  <header class="wrap hero" id="top">
-    <div class="topline"><strong>FDE DISCOVERY LAB</strong><span>／</span><span>项目方案实战课件</span><span class="demo">静态交互演示</span></div>
-    <h1>把团队知识，变成<em>可追溯、可治理</em>的企业助手</h1>
-    <p class="lede">围绕你的多租户知识库 SaaS MVP，按需求边界、系统架构、租户权限、RAG、Ollama、Wiki 治理与项目回报逐章拆解。测算器只在本页本地运行，费率和业务规模均为可编辑的教学假设。</p>
-    <div class="goals">
-      <div class="goal"><b>01 · 定范围</b><span>明确一期做什么、暂不做什么</span></div>
-      <div class="goal"><b>02 · 讲架构</b><span>FastAPI、Harness、RAG、Ollama 串成闭环</span></div>
-      <div class="goal"><b>03 · 守边界</b><span>每次读取都按租户和组织权限校验</span></div>
-      <div class="goal"><b>04 · 算价值</b><span>用输入数据估成本、回本期与交付报价</span></div>
+<div class="app-shell">
+  <header class="topbar">
+    <div class="brand">
+      <div class="brand-mark" aria-hidden="true">F</div>
+      <div><div class="brand-name">FDE Discovery Lab</div><div class="brand-caption">FIELD ENGINEERING PRACTICE</div></div>
+    </div>
+    <div class="topbar-right">
+      <span>案例演练工作台</span>
+      <span class="live-badge">训练模式</span>
+      <span class="user-dot" aria-label="访客">F</span>
     </div>
   </header>
 
-  <nav class="chapters" aria-label="课件章节导航"><div class="wrap">
-    <a href="#brief"><span class="n">00</span>项目一页纸</a><a href="#ch1"><span class="n">01</span>MVP 边界</a><a href="#ch2"><span class="n">02</span>系统架构</a><a href="#ch3"><span class="n">03</span>租户权限</a><a href="#ch4"><span class="n">04</span>RAG 成本</a><a href="#ch5"><span class="n">05</span>部署容量</a><a href="#ch6"><span class="n">06</span>Harness 治理</a><a href="#ch7"><span class="n">07</span>Wiki 图谱</a><a href="#ch8"><span class="n">08</span>ROI 与报价</a><a href="#ch9"><span class="n">09</span>上线验收</a>
-  </div></nav>
-
-  <main class="wrap">
-    <section id="brief">
-      <div class="sec-head"><span class="no">00</span><h2>先用一页纸对齐项目事实</h2><span class="en">PROJECT BRIEF</span></div>
-      <p class="body">以下内容按现有仓库、项目说明和白板要求整理。没有资料支持的客户规模与业务量，明确留空，避免把示例数据当成真实承诺。</p>
-      <div class="tblwrap"><table><tbody>
-        <tr><th>项目名称</th><td>FDE Discovery Lab · 多租户知识库 Wiki SaaS</td><th>交付形态</th><td>Web 控制台 + FastAPI 服务</td></tr>
-        <tr><th>一期技术</th><td>FastAPI、PostgreSQL、Ollama、RAG、LLM Wiki</td><th>治理方式</th><td>AI Harness 编排、来源引用、审计、管理员审核</td></tr>
-        <tr><th>权限层级</th><td>平台管理员、租户管理员、组织单元管理员、成员</td><th>资料格式</th><td>Markdown / UTF-8 文本</td></tr>
-        <tr><th>客户与行业</th><td class="muted">待补充：项目一页纸 CSV 未填写</td><th>用户数与问答量</th><td class="muted">待补充：暂未提供规模数据</td></tr>
-      </tbody></table></div>
-      <div class="dl"><button class="button ghost" data-csv="brief">下载项目一页纸 CSV</button><button class="button ghost" data-csv="scope">下载 MVP 范围清单 CSV</button></div>
-      <div class="callout amber"><b>范围提醒</b>CSV 里的“青禾报销助手企业版”属于模板示例，未被当作你的客户项目。客户、规模、日请求量与目标部署环境仍需由项目方补充。</div>
+  <main class="page">
+    <section class="intro">
+      <div>
+        <div class="eyebrow">FDE · CUSTOMER DISCOVERY</div>
+        <h1>从客户问题，走到可验证的 AI 机会。</h1>
+        <p>用结构化的发现、方案、ROI 与交付练习，把一次客户对话整理成有证据、有边界、能推进的项目判断。</p>
+      </div>
+      <div class="intro-actions">
+        <button class="btn" id="exportBtn" type="button">导出本轮记录</button>
+        <button class="btn primary" id="focusBtn" type="button">继续当前阶段</button>
+      </div>
     </section>
 
-    <section id="ch1">
-      <div class="sec-head"><span class="no">01</span><h2>MVP 边界：先交付可验证的知识闭环</h2><span class="en">SCOPE & OUTCOME</span></div>
-      <p class="body">一期的目标不是堆齐所有 AI 能力，而是证明：用户能在授权范围内导入资料、检索、获得带来源的回答，并让管理员审核 Wiki 更新。</p>
-      <div class="blocks">
-        <div class="block"><span class="bn">01 / ACCESS</span><h4>账号与租户</h4><p>建立租户、成员、组织单元和角色；API 对资源做服务端授权。</p></div>
-        <div class="block"><span class="bn">02 / INGEST</span><h4>资料导入</h4><p>接收 Markdown 和 UTF-8 文本，分块并建立可检索索引。</p></div>
-        <div class="block"><span class="bn">03 / ANSWER</span><h4>RAG 问答</h4><p>按权限检索片段，生成回答并展示文档与片段引用。</p></div>
-        <div class="block red"><span class="bn">04 / GOVERN</span><h4>Wiki 草稿</h4><p>抽取实体和关系，保留来源；审核通过后再发布。</p></div>
+    <section class="case-strip" aria-label="当前演练信息">
+      <div class="case-cell">
+        <div class="case-label">Selected case</div>
+        <div class="case-value case-name" id="caseName">Calder</div>
+        <div class="case-sub">FDE Discovery 场景</div>
       </div>
-      <div class="grid2">
-        <article class="card"><span class="tag">一期纳入</span><h3>交付物</h3><ul><li>平台、租户与组织单元管理</li><li>角色和知识库范围校验</li><li>文本导入、分块、向量化与检索</li><li>带引用的问答与 Wiki 草稿审核</li><li>Harness 统一日志、校验与审计事件</li></ul></article>
-        <article class="card"><span class="tag red">需单独评估</span><h3>当前未承诺</h3><ul><li>PDF、Word、Excel 等 Office 文件解析</li><li>跨租户搜索、公开匿名问答</li><li>外部 SaaS 模型与私有化 GPU 的正式 SLA</li><li>海量向量检索优化、复杂知识图谱编辑器</li><li>生产级备份、灾备、计费与多区域部署</li></ul></article>
+      <div class="case-cell">
+        <div class="case-label">Current stage</div>
+        <div class="case-value" id="currentStageLabel">Opportunity</div>
+        <div class="case-sub" id="currentStageSub">先确认机会是否值得推进</div>
       </div>
-      <h3>建议的交付节奏</h3><div class="steps">
-        <div class="step"><span class="sn">W1 · ALIGN</span><p>补齐业务量、租户数、数据权限和验收问题。</p></div><div class="step"><span class="sn">W2 · BUILD</span><p>打通租户、组织树、导入和授权边界。</p></div><div class="step"><span class="sn">W3 · RAG</span><p>完成检索、引用、拒答和质量评估样例。</p></div><div class="step"><span class="sn">W4 · PILOT</span><p>小范围试用，按验收结果决定扩展项。</p></div>
+      <div class="case-cell">
+        <div class="case-label">Evidence coverage</div>
+        <div class="case-value" id="coverageLabel">0 / 5 已记录</div>
+        <div class="progress-wrap"><div class="progress-track"><div class="progress-fill" id="progressFill"></div></div><div class="progress-text" id="progressText">0%</div></div>
       </div>
-      <div class="callout teal"><b>验收原则</b>每项功能都要能用一个可重复的场景验证：给定租户、用户、资料与问题，系统返回符合权限的内容和可核对来源。</div>
+      <div class="case-cell">
+        <div class="case-label">Training path</div>
+        <div class="case-value">5 个阶段</div>
+        <div class="case-sub" id="completeLabel">0 个阶段已完成</div>
+      </div>
     </section>
 
-    <section id="ch2">
-      <div class="sec-head"><span class="no">02</span><h2>系统架构：把模型调用放进可替换的 Harness</h2><span class="en">APPLICATION FLOW</span></div>
-      <p class="body">API 层负责身份与业务接口；权限层建立可信的租户上下文；Harness 编排检索、模型调用、输出检查和审计；模型服务只作为可替换的推理后端。</p>
-      <div class="graph" aria-label="请求链路示意"><div class="node">用户请求<br><span class="small">登录身份 · 租户</span></div><span class="arrow">→</span><div class="node">FastAPI<br><span class="small">鉴权 · 业务 API</span></div><span class="arrow">→</span><div class="node main">AI Harness<br><span class="small">策略 · 检索 · 校验 · 审计</span></div></div>
-      <div class="graph"><div class="node">PostgreSQL<br><span class="small">用户、租户、文档元数据</span></div><span class="arrow">↔</span><div class="node">RAG 检索<br><span class="small">只搜允许访问的知识片段</span></div><span class="arrow">↔</span><div class="node">Ollama<br><span class="small">聊天模型与 Embedding</span></div></div>
-      <div class="formula">输入 → 身份校验 → 租户与组织范围 → 检索 → 生成 → 引用核对 → 审计记录<br><small>Harness 统一封装上下文和处理步骤，避免每个 API 各自拼一套提示词、检索逻辑和日志。</small></div>
-      <div class="grid3">
-        <article class="card"><span class="tag">数据面</span><h3>PostgreSQL</h3><p class="small">保存租户、组织树、文档元数据、分块、权限配置和审核状态。</p></article>
-        <article class="card"><span class="tag">编排面</span><h3>AI Harness</h3><p class="small">接收可信权限上下文，统一执行检索、模型调用、引用与质量检查。</p></article>
-        <article class="card"><span class="tag">推理面</span><h3>Ollama</h3><p class="small">承担本地聊天与向量模型；部署拓扑变化时可替换模型端点。</p></article>
-      </div>
-      <div class="callout amber"><b>设计边界</b>部署到云端的 API 不能把 Ollama 配置成 localhost 或仅容器内部的服务名。托管服务必须能安全访问模型端点，或通过同一私有网络部署。</div>
-    </section>
+    <nav class="stage-tabs" id="stageTabs" aria-label="演练阶段"></nav>
 
-    <section id="ch3">
-      <div class="sec-head"><span class="no">03</span><h2>多租户权限：先限定数据，再判断角色</h2><span class="en">TENANT ISOLATION</span></div>
-      <p class="body">租户隔离不是界面筛选条件，而是所有数据库查询和业务 API 的强制约束。任何请求都应从已验证身份推导租户范围，不信任客户端传来的 tenant_id。</p>
-      <div class="tblwrap"><table><thead><tr><th>角色</th><th>管理范围</th><th>默认知识读取范围</th><th>典型操作</th></tr></thead><tbody>
-        <tr><td><b>平台管理员</b></td><td>平台级租户</td><td>默认不读取租户文档正文</td><td>创建租户、首位租户管理员</td></tr>
-        <tr><td><b>租户管理员</b></td><td>单一租户</td><td>本租户授权知识库</td><td>管理成员、组织树、知识库</td></tr>
-        <tr><td><b>组织单元管理员</b></td><td>自身组织单元及后代</td><td>本范围内获授权知识库</td><td>管理范围内成员与资料</td></tr>
-        <tr><td><b>普通成员</b></td><td>个人操作</td><td>租户共享或所属单元明确授权的资料</td><td>提问、阅读已发布 Wiki</td></tr>
-      </tbody></table></div>
-      <div class="grid2">
-        <div class="card"><h3>查询前检查</h3><ol><li>验证登录态并解析用户 ID</li><li>从服务端载入成员所属租户与组织单元</li><li>先加 tenant_id 条件，再加资源授权条件</li><li>检查目标知识库范围和操作角色</li><li>记录允许或拒绝的审计事件</li></ol></div>
-        <div class="card"><h3>必须覆盖的拒绝用例</h3><ul><li>用户修改请求参数读取其他租户文档</li><li>单元管理员访问兄弟单元资料</li><li>平台管理员尝试默认读取租户正文</li><li>成员调用文档导入或 Wiki 发布接口</li><li>已撤销权限的旧会话继续访问私有资料</li></ul></div>
-      </div>
-      <div class="calc">
-        <div class="calc-title">权限口径速查</div><div class="calc-desc">选一个角色，查看演示规则。它用于讲解设计，不连接真实账号或仓库 API。</div>
-        <div class="fields"><div class="field"><label for="role-pick">当前演示角色</label><select id="role-pick"><option value="member">普通成员</option><option value="unit">组织单元管理员</option><option value="tenant">租户管理员</option><option value="platform">平台管理员</option></select></div></div>
-        <div class="verdict" id="role-result" aria-live="polite">可提问并查看已发布 Wiki；只能检索租户共享或所属单元已授权的知识库。</div>
-      </div>
-      <div class="callout red"><b>安全不变量</b>所有资源 API 默认拒绝；权限检查必须在服务端完成。平台级角色不自动获得租户知识读取权。</div>
-    </section>
-
-    <section id="ch4">
-      <div class="sec-head"><span class="no">04</span><h2>RAG 成本：把每次回答拆成可计量的调用</h2><span class="en">RETRIEVAL & TOKENS</span></div>
-      <p class="body">RAG 的月成本不只取决于聊天模型单价。分块与 Embedding 产生索引成本；每次问题可能包含重写、检索、重排、回答或重试，多步调用要乘进预算。</p>
-      <div class="steps"><div class="step"><span class="sn">01 · INGEST</span><p>文本清洗、按规则切块并保留来源元数据。</p></div><div class="step"><span class="sn">02 · EMBED</span><p>为每个片段生成向量，记录模型与版本。</p></div><div class="step"><span class="sn">03 · RETRIEVE</span><p>在权限过滤之后取回相关片段。</p></div><div class="step"><span class="sn">04 · GENERATE</span><p>组织上下文，生成回答并绑定引用。</p></div></div>
-      <div class="formula">月模型费 ≈ 日请求量 × 30 × 每次调用步数 × 重试系数 × 单次 Token 成本<br><small>单次 Token 成本 = (输入 Token × 输入单价 + 输出 Token × 输出单价) ÷ 1,000,000。</small></div>
-      <div class="calc" id="rag-calc">
-        <div class="calc-title">RAG 月模型成本估算</div><div class="calc-desc">下方价格是演示输入，不代表任何厂商当前报价。按合同或控制台价格替换；本页计算不会发送数据。</div>
-        <div class="fields">
-          <div class="field"><label for="rag-req">日均问题数（次）</label><input id="rag-req" type="number" min="0" step="100" value="8000"></div>
-          <div class="field"><label for="rag-in">每次输入 Token</label><input id="rag-in" type="number" min="0" step="100" value="2600"></div>
-          <div class="field"><label for="rag-out">每次输出 Token</label><input id="rag-out" type="number" min="0" step="100" value="500"></div>
-          <div class="field"><label for="rag-steps">每个问题模型调用步数</label><input id="rag-steps" type="number" min="1" step="1" value="2"></div>
-          <div class="field"><label for="rag-retry">平均重试率（%）</label><input id="rag-retry" type="number" min="0" step="1" value="5"></div>
-          <div class="field"><label for="rag-pin">输入单价（元 / 百万 Token）</label><input id="rag-pin" type="number" min="0" step="0.1" value="3"></div>
-          <div class="field"><label for="rag-pout">输出单价（元 / 百万 Token）</label><input id="rag-pout" type="number" min="0" step="0.1" value="12"></div>
+    <section class="workspace" id="workbench">
+      <article class="main-panel">
+        <div class="panel-heading">
+          <div>
+            <div class="panel-stage" id="stageEyebrow"></div>
+            <h2 id="stageTitle"></h2>
+            <p id="stageDescription"></p>
+          </div>
+          <div class="stage-chip" id="stageChip"></div>
         </div>
-        <div class="results"><div class="result"><div class="rl">单次问题模型费</div><div class="rv" id="rag-once">¥0.00</div><div class="rs">含调用步数和重试</div></div><div class="result"><div class="rl">每月问题量</div><div class="rv" id="rag-volume">0</div><div class="rs">按 30 天估算</div></div><div class="result"><div class="rl">月模型费</div><div class="rv red" id="rag-month">¥0</div><div class="rs">不含数据库和服务器</div></div><div class="result"><div class="rl">年模型费</div><div class="rv" id="rag-year">¥0</div><div class="rs">按当前输入线性外推</div></div></div>
-        <div class="verdict" id="rag-verdict" aria-live="polite"></div>
-      </div>
-      <div class="callout teal"><b>降低成本的顺序</b>先减少无效上下文与重复调用，再调 chunk 大小、缓存和模型分级；每次优化都要检查引用命中率和答案质量，不能只看账单。</div>
-    </section>
-
-    <section id="ch5">
-      <div class="sec-head"><span class="no">05</span><h2>部署容量：把模型、并发和端点一起评估</h2><span class="en">OLLAMA & CAPACITY</span></div>
-      <p class="body">Ollama 负责模型推理，但部署方案还要考虑并发、上下文长度、显存、网络可达性、模型加载时间和运维方式。上线前用目标模型与真实问题做压测。</p>
-      <div class="calc">
-        <div class="calc-title">模型显存粗估</div><div class="calc-desc">这是早期规划的近似公式。权重字节数与 KV Cache 因模型结构和后端实现而异；请用目标模型资料或实测值替换默认假设。</div>
-        <div class="fields">
-          <div class="field"><label for="vr-param">模型参数量（十亿）</label><input id="vr-param" type="number" min="0.1" step="0.1" value="8"></div>
-          <div class="field"><label for="vr-byte">每参数字节数（量化精度）</label><select id="vr-byte"><option value="0.5">约 4 bit · 0.5 B</option><option value="1">约 8 bit · 1 B</option><option value="2" selected>约 16 bit · 2 B</option></select></div>
-          <div class="field"><label for="vr-kv">每路每 1K Token KV（GB）</label><input id="vr-kv" type="number" min="0" step="0.01" value="0.08"></div>
-          <div class="field"><label for="vr-ctx">上下文长度（Token）</label><input id="vr-ctx" type="number" min="1" step="512" value="4096"></div>
-          <div class="field"><label for="vr-conc">目标并发（路）</label><input id="vr-conc" type="number" min="1" step="1" value="4"></div>
-          <div class="field"><label for="vr-reserve">额外预留（%）</label><input id="vr-reserve" type="number" min="0" step="5" value="25"></div>
+        <div class="objective" id="objective"></div>
+        <div id="stageContent"></div>
+        <div class="action-row">
+          <div class="action-note">记录会保存在当前浏览器；可随时导出为 Markdown。</div>
+          <div class="action-buttons">
+            <button class="btn small" id="saveBtn" type="button">保存进度</button>
+            <button class="btn accent small" id="completeBtn" type="button">完成本阶段</button>
+            <button class="btn primary small" id="nextBtn" type="button">进入下一阶段</button>
+          </div>
         </div>
-        <div class="results"><div class="result"><div class="rl">模型权重</div><div class="rv" id="vr-weight">0 GB</div></div><div class="result"><div class="rl">KV Cache</div><div class="rv" id="vr-cache">0 GB</div></div><div class="result"><div class="rl">规划显存</div><div class="rv red" id="vr-total">0 GB</div></div></div>
-        <div class="verdict" id="vr-verdict" aria-live="polite"></div>
-      </div>
-      <div class="grid2">
-        <article class="card"><span class="tag">本地开发</span><h3>Compose 网络</h3><p class="small">API 容器访问 Ollama 时使用同一 Compose 网络中的服务名。宿主机上的本地运行则配置 localhost 地址。</p></article>
-        <article class="card"><span class="tag red">云端托管</span><h3>端点必须可达</h3><p class="small">托管 API 里的 localhost 指向 API 容器本身。需在托管网络中部署模型，或配置受控、安全且网络可达的推理端点。</p></article>
-      </div>
-      <div class="callout amber"><b>部署检查</b>确认数据库连接、健康检查、JWT 密钥、模型名称、模型端点网络策略、超时和限流；不要把密码、数据库 URL 或令牌提交到公开仓库。</div>
-    </section>
+      </article>
 
-    <section id="ch6">
-      <div class="sec-head"><span class="no">06</span><h2>AI Harness：让每个回答经过同一组检查</h2><span class="en">POLICY & OBSERVABILITY</span></div>
-      <p class="body">Harness 是服务内部的统一编排层，不假定某个特定外部产品。它接收已授权上下文，执行 RAG 流程并产生可追踪的结果。</p>
-      <div class="steps"><div class="step"><span class="sn">1 · CONTEXT</span><p>用户、租户、组织单元、可用知识库 ID。</p></div><div class="step"><span class="sn">2 · RETRIEVE</span><p>先加权限过滤，再召回与问题相关的片段。</p></div><div class="step"><span class="sn">3 · GENERATE</span><p>调用模型，要求答案仅依据给定资料。</p></div><div class="step"><span class="sn">4 · VERIFY</span><p>校验引用、记录耗时、状态和审计事件。</p></div></div>
-      <div class="matrix">
-        <article class="card"><strong>输入约束</strong><p>对用户输入、检索片段和模型输出分别处理，不让资料中的文字改写系统权限规则。</p></article>
-        <article class="card"><strong>引用校验</strong><p>回答中的来源 ID 必须对应本次检索结果；没有足够证据时返回不确定说明。</p></article>
-        <article class="card"><strong>质量信号</strong><p>跟踪召回命中、引用覆盖、拒答、延迟、错误率和人工反馈，为后续调优留下依据。</p></article>
-      </div>
-      <div class="formula">audit_event = { tenant_id, actor_id, action, resource_id, decision, trace_id, created_at }<br><small>日志只记录必要的诊断字段；敏感正文是否留存应由数据保留策略决定。</small></div>
-      <div class="callout red"><b>失败时的行为</b>权限不足就拒绝；检索为空就说明资料不足；模型超时就返回可理解的失败提示。不要用没有来源的“看起来合理”答案掩盖错误。</div>
-    </section>
-
-    <section id="ch7">
-      <div class="sec-head"><span class="no">07</span><h2>LLM Wiki：关系可浏览，来源可回查</h2><span class="en">KNOWLEDGE GRAPH</span></div>
-      <p class="body">图谱的价值来自稳定概念、清晰关系和原始证据，不来自节点数量。先让系统生成待审核草稿，再由知识管理员决定哪些内容进入正式 Wiki。</p>
-      <div class="graph"><div class="node">源文档<br><span class="small">段落 · 文档版本</span></div><span class="arrow">→</span><div class="node main">实体与关系草稿<br><span class="small">置信度 · 证据片段</span></div><span class="arrow">→</span><div class="node">审核与发布<br><span class="small">管理员 · 变更记录</span></div></div>
-      <div class="grid3">
-        <article class="card"><span class="tag">实体</span><h3>统一术语</h3><p class="small">为产品、流程、团队和关键指标建立唯一可识别的条目。</p></article>
-        <article class="card"><span class="tag">关系</span><h3>说明关联</h3><p class="small">用明确的关系表达依赖、归属、由谁负责或由什么流程产生。</p></article>
-        <article class="card"><span class="tag red">证据</span><h3>保留出处</h3><p class="small">记录来源文档、段落位置和版本；审核后也能回到原文。</p></article>
-      </div>
-      <div class="tblwrap"><table><thead><tr><th>状态</th><th>可见范围</th><th>下一步</th></tr></thead><tbody><tr><td>草稿</td><td>有管理权限的编辑者</td><td>检查实体、关系、证据与权限范围</td></tr><tr><td>已发布</td><td>按 Wiki 与知识库授权对用户开放</td><td>保留版本、审核人和发布时间</td></tr><tr><td>已撤回</td><td>停止作为有效知识展示</td><td>记录撤回原因并保留审计链路</td></tr></tbody></table></div>
-      <div class="callout teal"><b>推荐审核清单</b>实体是否存在于原文、关系方向是否正确、证据是否充分、内容是否包含不应外发的信息、发布范围是否匹配原知识库权限。</div>
-    </section>
-
-    <section id="ch8">
-      <div class="sec-head"><span class="no">08</span><h2>ROI 与报价：把收益、运行费和实施范围放在一张账上</h2><span class="en">VALUE & PRICING</span></div>
-      <p class="body">当前没有你的客户人数、节省工时、部署环境或合同价格，所以这里提供可编辑的测算框架。请用客户访谈和真实成本替换示例值，再形成正式报价。</p>
-      <div class="calc">
-        <div class="calc-title">客户 ROI 演示测算</div><div class="calc-desc">按每人每月节省工时估算人工价值，乘以实际兑现比例；扣除年运行费和一次性实施投入。本地计算，不保存输入。</div>
-        <div class="fields">
-          <div class="field"><label for="roi-users">覆盖用户数（人）</label><input id="roi-users" type="number" min="0" step="5" value="40"></div>
-          <div class="field"><label for="roi-hours">每人每月节省工时</label><input id="roi-hours" type="number" min="0" step="1" value="5"></div>
-          <div class="field"><label for="roi-salary">月综合人工成本（元 / 人）</label><input id="roi-salary" type="number" min="0" step="500" value="12000"></div>
-          <div class="field"><label for="roi-realize">收益兑现比例（%）</label><input id="roi-realize" type="number" min="0" max="100" step="5" value="55"></div>
-          <div class="field"><label for="roi-once">一次性实施投入（元）</label><input id="roi-once" type="number" min="0" step="10000" value="180000"></div>
-          <div class="field"><label for="roi-opex">年运行成本（元）</label><input id="roi-opex" type="number" min="0" step="5000" value="60000"></div>
+      <aside class="side-panel">
+        <div class="side-title"><h3>教练提示</h3><div class="side-icon" aria-hidden="true">i</div></div>
+        <p class="coach-copy" id="coachCopy"></p>
+        <ul class="coach-list" id="coachList"></ul>
+        <div class="evidence-box">
+          <div class="evidence-top"><span>本阶段证据完整度</span><span class="evidence-score" id="scoreValue">0%</span></div>
+          <p>只统计已填写的发现项，不代表自动判分或客户确认。</p>
+          <div class="mini-track"><span id="scoreFill"></span></div>
+          <div class="evidence-count" id="scoreCount">0 项已记录</div>
         </div>
-        <div class="results"><div class="result"><div class="rl">预计年化效率价值</div><div class="rv" id="roi-gain">¥0</div></div><div class="result"><div class="rl">扣运行费后年净收益</div><div class="rv" id="roi-net">¥0</div></div><div class="result"><div class="rl">简单回本期</div><div class="rv red" id="roi-payback">—</div></div><div class="result"><div class="rl">第一年净收益率</div><div class="rv" id="roi-rate">—</div></div></div>
-        <div class="verdict" id="roi-verdict" aria-live="polite"></div>
-      </div>
-      <div class="calc">
-        <div class="calc-title">实施报价底稿</div><div class="calc-desc">按角色人天、基础设施与风险预留测算一个讨论起点。正式报价还需要明确交付边界、验收、税费、运维 SLA 与变更机制。</div>
-        <div class="fields">
-          <div class="field"><label for="q-dev-days">应用开发人天</label><input id="q-dev-days" type="number" min="0" step="1" value="45"></div>
-          <div class="field"><label for="q-dev-rate">开发人天单价（元）</label><input id="q-dev-rate" type="number" min="0" step="100" value="2500"></div>
-          <div class="field"><label for="q-ai-days">AI / 检索人天</label><input id="q-ai-days" type="number" min="0" step="1" value="18"></div>
-          <div class="field"><label for="q-ai-rate">AI 人天单价（元）</label><input id="q-ai-rate" type="number" min="0" step="100" value="2800"></div>
-          <div class="field"><label for="q-pm-days">产品 / 交付人天</label><input id="q-pm-days" type="number" min="0" step="1" value="12"></div>
-          <div class="field"><label for="q-pm-rate">交付人天单价（元）</label><input id="q-pm-rate" type="number" min="0" step="100" value="2200"></div>
-          <div class="field"><label for="q-infra">首年基础设施估算（元）</label><input id="q-infra" type="number" min="0" step="1000" value="36000"></div>
-          <div class="field"><label for="q-risk">风险预留（%）</label><input id="q-risk" type="number" min="0" step="1" value="15"></div>
-          <div class="field"><label for="q-margin">成本加成（%）</label><input id="q-margin" type="number" min="0" step="1" value="25"></div>
-        </div>
-        <div class="results"><div class="result"><div class="rl">人力成本</div><div class="rv" id="q-labor">¥0</div></div><div class="result"><div class="rl">基础成本</div><div class="rv" id="q-base">¥0</div></div><div class="result"><div class="rl">带风险与加成的讨论价</div><div class="rv red" id="q-price">¥0</div></div><div class="result"><div class="rl">角色总人天</div><div class="rv" id="q-days">0</div></div></div>
-        <div class="verdict warn" id="q-verdict" aria-live="polite"></div>
-      </div>
-      <div class="dl"><button class="button ghost" data-csv="roi">下载当前 ROI 测算 CSV</button><button class="button ghost" data-csv="quote">下载当前报价底稿 CSV</button></div>
-      <div class="callout amber"><b>课程测算不是商业报价</b>示例输入仅用于展示公式。未提供的客户数据、模型费率与部署价格都必须向客户或供应商核实，不要直接把演示结果作为承诺。</div>
+        <div class="local-note"><strong>本地训练原型</strong><br>本页面不会把笔记发送到服务器，也没有连接实时模型。案例事实请以正式教案或客户访谈为准。</div>
+      </aside>
     </section>
 
-    <section id="ch9">
-      <div class="sec-head"><span class="no">09</span><h2>上线验收：逐项验证权限、引用与运维</h2><span class="en">ACCEPTANCE CHECKLIST</span></div>
-      <p class="body">把演示效果变成可上线系统，需要明确每个验收项的证据和负责人。勾选状态只保存在当前页面内存中，刷新后会重置。</p>
-      <div class="grid2">
-        <article class="card"><h3>产品与权限</h3><ul class="checklist" id="acceptance">
-          <li><input type="checkbox" id="ac1"><label for="ac1">平台管理员创建租户；不会自动读取该租户文档正文。</label></li>
-          <li><input type="checkbox" id="ac2"><label for="ac2">成员无法跨租户检索或读取文档。</label></li>
-          <li><input type="checkbox" id="ac3"><label for="ac3">组织单元管理员访问范围仅覆盖本单元及后代。</label></li>
-          <li><input type="checkbox" id="ac4"><label for="ac4">回答引用可回到本次检索得到的授权文档片段。</label></li>
-          <li><input type="checkbox" id="ac5"><label for="ac5">Wiki 草稿经管理员审核后才进入已发布状态。</label></li>
-        </ul></article>
-        <article class="card"><h3>运行与数据</h3><ul class="checklist">
-          <li><input type="checkbox" id="ac6"><label for="ac6">数据库连接、迁移、备份和恢复流程有记录。</label></li>
-          <li><input type="checkbox" id="ac7"><label for="ac7">托管 API 能访问模型端点，密钥存于托管环境。</label></li>
-          <li><input type="checkbox" id="ac8"><label for="ac8">错误率、延迟、引用覆盖和审计事件可查询。</label></li>
-          <li><input type="checkbox" id="ac9"><label for="ac9">并发、上下文长度和模型加载时间已用目标环境验证。</label></li>
-          <li><input type="checkbox" id="ac10"><label for="ac10">项目一页纸、MVP 边界、验收数据与责任人已补齐。</label></li>
-        </ul></article>
-      </div>
-      <div class="check-progress" id="check-progress" aria-live="polite">已完成 0 / 10 项</div>
-      <div class="dl"><button class="button ghost" data-csv="acceptance">下载上线验收清单 CSV</button><button class="button ghost" data-csv="roles">下载角色权限矩阵 CSV</button></div>
-      <div class="callout teal"><b>下一步需要项目方补充</b>目标客户和行业、活跃用户数、日均问题数、资料规模、部署方式、模型端点预算、上线时间和验收指标。补齐后就能把教学参数替换成项目测算。</div>
-    </section>
-
-    <footer class="foot"><span>FDE Discovery Lab · 多租户知识库 SaaS 项目实战课件</span><span>静态交互演示 · 未连接真实 API、数据库或 Ollama</span><span><a href="https://github.com/yonghuming-jsy/fde-discovery-lab">公开 GitHub 仓库</a></span></footer>
+    <footer class="footer">
+      <span>FDE Discovery Lab · Case-based practice</span>
+      <span>训练目标：把事实、假设、风险和下一步区分清楚</span>
+    </footer>
   </main>
-  <div class="toast" id="toast" role="status" aria-live="polite"></div>
-  <script>
-    const $ = id => document.getElementById(id);
-    const num = id => { const value = parseFloat($(id).value); return Number.isFinite(value) ? value : 0; };
-    const money = value => '¥' + Math.round(value).toLocaleString('zh-CN');
-    const decimalMoney = value => '¥' + value.toFixed(2);
-    const bind = (ids, fn) => ids.forEach(id => { $(id).addEventListener('input', fn); $(id).addEventListener('change', fn); });
-    function showToast(message){const toast=$('toast');toast.textContent=message;toast.classList.add('show');clearTimeout(showToast.timer);showToast.timer=setTimeout(()=>toast.classList.remove('show'),2400);}
+</div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-    function calcRag(){
-      const requests=num('rag-req'), input=num('rag-in'), output=num('rag-out'), steps=Math.max(1,num('rag-steps')), retry=num('rag-retry')/100;
-      const once=((input*num('rag-pin')+output*num('rag-pout'))/1000000)*steps*(1+retry);
-      const month=once*requests*30;
-      $('rag-once').textContent=decimalMoney(once);$('rag-volume').textContent=Math.round(requests*30).toLocaleString('zh-CN');$('rag-month').textContent=money(month);$('rag-year').textContent=money(month*12);
-      $('rag-verdict').textContent=month===0?'填写模型单价后即可估算；Embedding、数据库、服务器与人工运营成本需另计。':(month<3000?'当前模型费占比可能较低，优先确认检索质量、人工维护和部署成本。':'模型费开始成为重要运营项，可评估缓存、模型分级和上下文压缩，并复核答案质量。');
+<script>
+(function () {
+  "use strict";
+
+  var stages = [
+    {
+      id: "opportunity", en: "OPPORTUNITY", name: "机会判断", subtitle: "先确认机会是否值得推进",
+      title: "确认这是个值得推进的机会",
+      description: "把客户的触发事件、痛点、影响和推进条件写成可验证的证据。没有证据的地方先标为待确认。",
+      objective: "本阶段目标：<strong>判断问题是否真实、价值是否足够、是否存在明确的推进路径。</strong> 不要先承诺模型或产品。",
+      section: "机会判断记录", sectionHint: "从已知事实开始；未知项保持空白",
+      fields: [
+        ["trigger", "触发事件与 Why now", "是什么变化让客户现在开始评估？请记录客户原话或可核验事件。"],
+        ["problem", "当前问题与工作方式", "现在由谁、通过什么流程处理？最明显的摩擦发生在哪一步？"],
+        ["impact", "业务影响与衡量口径", "影响到时间、成本、收入、风险还是客户体验？怎样量化？"],
+        ["owner", "业务负责人与关键角色", "谁拥有问题？谁会使用、评估、批准或否决方案？"],
+        ["timing", "时间线与决策过程", "目标上线时间、决策节点、预算来源和下一次评审是什么？"]
+      ],
+      prompts: [
+        ["触发", "“是什么促使你们现在开始看这个问题？”"],
+        ["影响", "“如果现状再维持两个季度，最直接的代价是什么？”"],
+        ["决策", "“除了你之外，谁需要认可这项改变？”"]
+      ],
+      coach: "优先捕捉客户已确认的事实，再写推断。把“想试试 AI”拆成具体流程、成本和业务结果。",
+      tips: ["追问具体实例，不只记录抽象诉求。", "至少找到一项可量化的影响指标。", "明确下一步会议、参与人和准备材料。"]
+    },
+    {
+      id: "discovery", en: "DISCOVERY", name: "需求发现", subtitle: "画清工作流、数据与约束",
+      title: "把需求落到真实工作流",
+      description: "从输入、判断、动作、异常和结果拆解流程，识别数据来源、系统边界以及人必须参与的环节。",
+      objective: "本阶段目标：<strong>理解当前流程如何运行、哪些步骤适合 AI、哪些例外必须保留人工判断。</strong>",
+      section: "工作流与约束", sectionHint: "用一条真实业务路径说明，不用概念代替细节",
+      fields: [
+        ["workflow", "当前流程步骤", "从请求进入到最终完成，按顺序记录参与者、系统和交接点。"],
+        ["volume", "业务量与波动", "日/月处理量、峰值、季节性，以及不同类别的占比是什么？"],
+        ["exceptions", "例外与失败场景", "哪些情况需要升级、补材料、人工复核或回滚？"],
+        ["data", "数据来源与质量", "数据在哪些系统？权限、格式、完整性、保留期限如何？"],
+        ["constraints", "安全、合规与上线约束", "能否上云？哪些字段需脱敏？审计、延迟、可用性有什么要求？"]
+      ],
+      prompts: [
+        ["走流程", "“能不能带我过一遍最近一次从开始到结束的处理过程？”"],
+        ["找例外", "“哪类请求最容易卡住，通常怎么恢复？”"],
+        ["查数据", "“做出判断时需要读哪些字段，谁有权访问？”"]
+      ],
+      coach: "好的发现会揭示系统与人员之间的真实交接。别把“有数据”误当成“数据可用且可授权”。",
+      tips: ["画出 happy path 和至少一条 exception path。", "标注每个步骤的系统、负责人和数据权限。", "明确人工复核条件与错误处理责任。"]
+    },
+    {
+      id: "solution", en: "SOLUTION", name: "方案设计", subtitle: "把问题映射成可交付方案",
+      title: "设计最小可验证的解决方案",
+      description: "从一个高价值流程切入，说明 AI 负责什么、人负责什么、如何接入数据和系统，以及怎样控制风险。",
+      objective: "本阶段目标：<strong>提出小范围、可测量、能回退的 MVP，并列出上线前必须验证的技术假设。</strong>",
+      section: "方案与验证边界", sectionHint: "将设计选择和待验证假设分开写",
+      fields: [
+        ["usecase", "首个用例与用户动作", "MVP 服务哪个角色？输入是什么？AI 输出后会触发什么动作？"],
+        ["approach", "模型与部署路径", "API、私有化或混合部署？依据数据敏感度、延迟、成本和维护能力说明。"],
+        ["integration", "系统与数据集成", "要读写哪些系统？认证方式、接口所有者、限流和失败重试是什么？"],
+        ["human", "人工复核与回退", "什么情况必须人工确认？出现错误时如何停止自动动作并恢复？"],
+        ["validation", "验证指标与验收", "用哪些离线样例、质量阈值、延迟和业务指标决定是否扩大范围？"]
+      ],
+      prompts: [
+        ["缩范围", "“哪一个流程切片能在四周内验证价值？”"],
+        ["控风险", "“错误结果会造成什么影响，谁来批准关键动作？”"],
+        ["定验收", "“如果试点成功，你希望看到哪三个数字变化？”"]
+      ],
+      coach: "方案要从约束推导出来。先处理数据可达、权限、集成和验收，再挑模型或框架。",
+      tips: ["明确模型输出是否仅建议，还是会执行动作。", "准备可追溯的输入、输出和人工确认记录。", "列出阻塞试点的外部依赖及负责人。"]
+    },
+    {
+      id: "business-case", en: "BUSINESS CASE", name: "价值与报价", subtitle: "把收益、成本和风险放在同一张账上",
+      title: "让客户自己看见项目价值",
+      description: "先用客户认可的基线测算效率和风险收益，再把实施、模型/API、基础设施和运维成本纳入报价。",
+      objective: "本阶段目标：<strong>用可调整的假设算出净收益与回本期，并清楚标注哪些数字尚未验证。</strong>",
+      section: "ROI 测算", sectionHint: "所有输入均为演练假设；请替换成客户确认数据",
+      fields: [
+        ["monthly-volume", "月处理量", "每月进入目标流程的请求或单据数量。", "number"],
+        ["minutes-per-item", "每单节省分钟", "自动化后预计减少的净人工处理时间。", "number"],
+        ["automation-rate", "可自动处理比例", "可由系统完成且无需人工重做的比例。", "number"],
+        ["hourly-cost", "综合人工成本（元/小时）", "包含工资、福利和管理分摊的小时成本。", "number"],
+        ["monthly-run-cost", "月度运行成本（元）", "模型/API、云资源、监控与支持成本。", "number"],
+        ["implementation-cost", "一次性实施费用（元）", "集成、配置、评测、培训与上线费用。", "number"]
+      ],
+      prompts: [
+        ["收益纪律", "只计算客户认可的可兑现收益；避免把理论节省直接等同于裁员或现金收益。"],
+        ["成本完整", "纳入模型调用、重试、人工复核、集成、监控和持续运营。"],
+        ["敏感性", "分别用保守、基准、乐观假设复算，找出最影响结论的变量。"]
+      ],
+      coach: "ROI 是讨论假设的工具，不是保证结果。让客户确认输入，并展示变化最大的敏感项。",
+      tips: ["一次性投入与持续成本分开。", "避免把所有工时节省都计为现金收益。", "记录基线来源、测算区间和复核人。"]
+    },
+    {
+      id: "handoff", en: "HANDOFF", name: "交付交接", subtitle: "把决策转成可执行的下一步",
+      title: "交接一份团队能执行的计划",
+      description: "将范围、责任人、依赖、验收指标和风险写清楚，让售前、工程、业务与安全团队接得住。",
+      objective: "本阶段目标：<strong>明确谁在何时交付什么，如何验收，失败时如何退出或回退。</strong>",
+      section: "试点交接清单", sectionHint: "每项要有负责人或明确的待确认标记",
+      fields: [
+        ["scope", "试点范围与非目标", "目标用户、流程、数据范围、覆盖时间；哪些内容明确不包含？"],
+        ["owners", "客户与交付责任人", "业务负责人、技术负责人、安全/数据负责人及我方 owner。"],
+        ["dependencies", "前置依赖与阻塞项", "访问授权、接口、样本数据、环境、采购或安全评审。"],
+        ["acceptance", "验收标准", "质量、节省时间、错误率、延迟、人工复核率等如何测量？"],
+        ["next-step", "下一步会议与承诺", "下一步日期、参会人、材料、负责人，以及未达成时的处理方式。"]
+      ],
+      prompts: [
+        ["可执行", "把“尽快推进”改成日期、负责人和完成定义。"],
+        ["可回退", "试点要有停止条件、人工接管方式和数据清理路径。"],
+        ["可复盘", "验收指标应能从现有日志或业务记录中取数。"]
+      ],
+      coach: "交接质量决定项目能不能启动。任何没有 owner、期限或验证方式的事项，都还是开放问题。",
+      tips: ["确认每个依赖的 owner 和承诺日期。", "保存范围变更与风险接受记录。", "结束时复述双方对下一步的共同理解。"]
     }
-    bind(['rag-req','rag-in','rag-out','rag-steps','rag-retry','rag-pin','rag-pout'],calcRag);calcRag();
+  ];
 
-    function calcVram(){
-      const weight=num('vr-param')*num('vr-byte'), cache=num('vr-kv')*num('vr-ctx')/1000*num('vr-conc'), total=(weight+cache)*(1+num('vr-reserve')/100);
-      $('vr-weight').textContent=weight.toFixed(1)+' GB';$('vr-cache').textContent=cache.toFixed(1)+' GB';$('vr-total').textContent=total.toFixed(1)+' GB';
-      $('vr-verdict').textContent='规划需求约 '+total.toFixed(1)+' GB。还需考虑运行时开销、驱动和模型加载方式；请以目标模型文档和压测结果为准。';
+  var params = new URLSearchParams(window.location.search);
+  var caseId = (params.get("case") || "calder").trim().toLowerCase() || "calder";
+  var stageId = params.get("stage") || "opportunity";
+  var activeIndex = Math.max(0, stages.findIndex(function (s) { return s.id === stageId; }));
+  var storageKey = "fde-discovery-lab:" + caseId;
+  var state = { values: {}, complete: {} };
+  var current = stages[activeIndex];
+
+  function escapeHtml(value) {
+    return String(value == null ? "" : value).replace(/[&<>"']/g, function (ch) {
+      return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[ch];
+    });
+  }
+  function loadState() {
+    try {
+      var raw = localStorage.getItem(storageKey);
+      if (raw) {
+        var parsed = JSON.parse(raw);
+        if (parsed && typeof parsed === "object") state = {
+          values: parsed.values && typeof parsed.values === "object" ? parsed.values : {},
+          complete: parsed.complete && typeof parsed.complete === "object" ? parsed.complete : {}
+        };
+      }
+    } catch (e) {}
+  }
+  function saveState(showToast) {
+    try {
+      localStorage.setItem(storageKey, JSON.stringify(state));
+      if (showToast) toast("本轮进度已保存在此浏览器");
+    } catch (e) {
+      if (showToast) toast("浏览器未允许本地存储，请导出记录");
     }
-    bind(['vr-param','vr-byte','vr-kv','vr-ctx','vr-conc','vr-reserve'],calcVram);calcVram();
+    renderSummary();
+  }
+  function toast(message) {
+    var el = document.getElementById("toast");
+    el.textContent = message;
+    el.classList.add("show");
+    window.clearTimeout(toast.timer);
+    toast.timer = window.setTimeout(function () { el.classList.remove("show"); }, 2300);
+  }
+  function stageFields(stage) {
+    return stage.fields.map(function (item) {
+      var id = item[0], label = item[1], hint = item[2], kind = item[3] || "textarea";
+      var value = state.values[id] || "";
+      var attrs = ' data-field="' + escapeHtml(id) + '"';
+      var input;
+      if (kind === "number") {
+        var suffix = id === "automation-rate" ? '<span class="unit">%</span>' : (id.indexOf("cost") > -1 ? '<span class="unit">元</span>' : "");
+        input = '<input type="number" min="0" step="any" id="' + escapeHtml(id) + '"' + attrs + ' value="' + escapeHtml(value) + '" inputmode="decimal" aria-label="' + escapeHtml(label) + '">';
+        return '<div class="field-card"><label for="' + escapeHtml(id) + '">' + escapeHtml(label) + suffix + '</label><div class="hint">' + escapeHtml(hint) + '</div>' + input + '</div>';
+      }
+      input = '<textarea id="' + escapeHtml(id) + '"' + attrs + ' placeholder="记录客户确认的事实；未知信息标记为待确认" aria-label="' + escapeHtml(label) + '">' + escapeHtml(value) + '</textarea>';
+      return '<div class="field-card"><label for="' + escapeHtml(id) + '">' + escapeHtml(label) + '</label><div class="hint">' + escapeHtml(hint) + '</div>' + input + '</div>';
+    }).join("");
+  }
+  function renderTabs() {
+    var html = stages.map(function (stage, index) {
+      var selected = index === activeIndex;
+      var done = !!state.complete[stage.id];
+      return '<button class="stage-tab' + (selected ? ' active' : '') + (done ? ' done' : '') + '" type="button" data-stage="' + stage.id + '" aria-current="' + (selected ? 'step' : 'false') + '">' +
+        '<span class="stage-number">' + (done ? '✓' : String(index + 1).padStart(2, "0")) + '</span>' +
+        '<span><span class="stage-name">' + escapeHtml(stage.name) + '</span><span class="stage-en">' + escapeHtml(stage.en) + '</span></span></button>';
+    }).join("");
+    document.getElementById("stageTabs").innerHTML = html;
+  }
+  function renderStage() {
+    current = stages[activeIndex];
+    document.getElementById("caseName").textContent = caseId.charAt(0).toUpperCase() + caseId.slice(1);
+    document.getElementById("currentStageLabel").textContent = current.en;
+    document.getElementById("currentStageSub").textContent = current.subtitle;
+    document.getElementById("stageEyebrow").textContent = "STAGE " + String(activeIndex + 1).padStart(2, "0") + " · " + current.en;
+    document.getElementById("stageTitle").textContent = current.title;
+    document.getElementById("stageDescription").textContent = current.description;
+    document.getElementById("stageChip").textContent = current.name;
+    document.getElementById("objective").innerHTML = current.objective;
+    var content = '<div class="section-label"><h3>' + escapeHtml(current.section) + '</h3><span>' + escapeHtml(current.sectionHint) + '</span></div>' +
+      '<div class="field-grid">' + stageFields(current) + '</div>' +
+      '<div class="section-label"><h3>本阶段提问与判断提示</h3><span>用于启发追问，不代替客户证据</span></div>' +
+      '<div class="prompt-row">' + current.prompts.map(function (p) {
+        return '<div class="prompt-card"><b>' + escapeHtml(p[0]) + '</b>' + escapeHtml(p[1]) + '</div>';
+      }).join("") + '</div>';
+    if (current.id === "business-case") content += renderRoi();
+    document.getElementById("stageContent").innerHTML = content;
+    document.getElementById("coachCopy").textContent = current.coach;
+    document.getElementById("coachList").innerHTML = current.tips.map(function (item) {
+      return '<li>' + escapeHtml(item) + '</li>';
+    }).join("");
+    document.getElementById("completeBtn").textContent = state.complete[current.id] ? "阶段已完成 ✓" : "完成本阶段";
+    document.getElementById("nextBtn").textContent = activeIndex === stages.length - 1 ? "回到机会判断" : "进入下一阶段";
+    renderTabs();
+    bindFields();
+    updateScore();
+    renderSummary();
+    if (current.id === "business-case") bindRoi();
+  }
+  function renderRoi() {
+    return '<div class="formula-card" aria-live="polite">' +
+      '<div class="metric"><span class="metric-label">预计月度净收益</span><strong class="metric-value" id="roiMonthly">—</strong><span class="metric-note">效率价值减月度运行成本</span></div>' +
+      '<div class="metric"><span class="metric-label">首年 ROI</span><strong class="metric-value" id="roiYear">—</strong><span class="metric-note">扣除一次性实施与全年运行成本</span></div>' +
+      '<div class="metric"><span class="metric-label">静态回本期</span><strong class="metric-value" id="roiPayback">—</strong><span class="metric-note">基于当前输入假设</span></div></div>' +
+      '<p class="action-note">计算口径：月处理量 × 单笔节省分钟 × 自动处理比例 × 小时成本 ÷ 60。</p>';
+  }
+  function bindFields() {
+    Array.prototype.forEach.call(document.querySelectorAll("[data-field]"), function (el) {
+      el.addEventListener("input", function () {
+        state.values[el.getAttribute("data-field")] = el.value;
+        updateScore();
+        saveState(false);
+        if (current.id === "business-case") calculateRoi();
+      });
+    });
+  }
+  function updateScore() {
+    var fields = current.fields.map(function (f) { return f[0]; });
+    var filled = fields.filter(function (key) {
+      return String(state.values[key] || "").trim() !== "";
+    }).length;
+    var pct = fields.length ? Math.round(filled * 100 / fields.length) : 0;
+    document.getElementById("scoreValue").textContent = pct + "%";
+    document.getElementById("scoreFill").style.width = pct + "%";
+    document.getElementById("scoreCount").textContent = filled + " / " + fields.length + " 项已记录";
+    document.getElementById("coverageLabel").textContent = filled + " / " + fields.length + " 已记录";
+    document.getElementById("progressFill").style.width = pct + "%";
+    document.getElementById("progressText").textContent = pct + "%";
+  }
+  function renderSummary() {
+    var done = stages.filter(function (stage) { return state.complete[stage.id]; }).length;
+    document.getElementById("completeLabel").textContent = done + " 个阶段已完成";
+    renderTabs();
+  }
+  function bindRoi() {
+    calculateRoi();
+  }
+  function numberValue(id) {
+    var value = Number(state.values[id]);
+    return Number.isFinite(value) && value >= 0 ? value : 0;
+  }
+  function money(value) {
+    if (!Number.isFinite(value)) return "—";
+    return new Intl.NumberFormat("zh-CN", { maximumFractionDigits: 0 }).format(value) + " 元";
+  }
+  function calculateRoi() {
+    var volume = numberValue("monthly-volume");
+    var minutes = numberValue("minutes-per-item");
+    var automation = Math.min(numberValue("automation-rate"), 100) / 100;
+    var hourly = numberValue("hourly-cost");
+    var monthlyRun = numberValue("monthly-run-cost");
+    var setup = numberValue("implementation-cost");
+    var monthlyValue = volume * minutes * automation * hourly / 60;
+    var monthlyNet = monthlyValue - monthlyRun;
+    var firstYearNet = monthlyValue * 12 - monthlyRun * 12 - setup;
+    var firstYearCost = monthlyRun * 12 + setup;
+    var roi = firstYearCost > 0 ? (firstYearNet / firstYearCost) * 100 : null;
+    var payback = monthlyNet > 0 ? setup / monthlyNet : null;
+    var monthEl = document.getElementById("roiMonthly");
+    if (!monthEl) return;
+    monthEl.textContent = money(monthlyNet);
+    document.getElementById("roiYear").textContent = roi === null ? "—" : Math.round(roi) + "%";
+    document.getElementById("roiPayback").textContent = payback === null ? "—" : (Math.round(payback * 10) / 10) + " 个月";
+  }
+  function setStage(index) {
+    activeIndex = (index + stages.length) % stages.length;
+    stageId = stages[activeIndex].id;
+    var next = new URL(window.location.href);
+    next.searchParams.set("case", caseId);
+    next.searchParams.set("stage", stageId);
+    next.searchParams.delete("attemptId");
+    window.history.replaceState({}, "", next);
+    renderStage();
+    document.getElementById("workbench").scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+  function exportNotes() {
+    var lines = ["# FDE Discovery Lab · " + caseId.charAt(0).toUpperCase() + caseId.slice(1), "", "导出时间：" + new Date().toLocaleString("zh-CN"), ""];
+    stages.forEach(function (stage, index) {
+      lines.push("## " + String(index + 1).padStart(2, "0") + " " + stage.name + " / " + stage.en);
+      stage.fields.forEach(function (field) {
+        var value = state.values[field[0]];
+        lines.push("- **" + field[1] + "：** " + (value && String(value).trim() ? String(value).trim().replace(/\n/g, " ") : "待补充"));
+      });
+      lines.push("- **阶段状态：** " + (state.complete[stage.id] ? "已完成" : "进行中"), "");
+    });
+    var blob = new Blob([lines.join("\n")], { type: "text/markdown;charset=utf-8" });
+    var link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    link.download = "fde-discovery-" + caseId + ".md";
+    link.click();
+    URL.revokeObjectURL(link.href);
+    toast("已导出本轮 Markdown 记录");
+  }
 
-    const roleCopy={
-      member:'可提问并查看已发布 Wiki；只能检索租户共享或所属单元已授权的知识库。',
-      unit:'可管理自身组织单元及后代范围内的成员和资料；不能越权到兄弟单元或租户级资源。',
-      tenant:'可管理本租户成员、组织树和知识库；仍不能访问其他租户的数据。',
-      platform:'可创建租户和首位租户管理员；平台身份本身不授予读取租户文档正文的权限。'
-    };
-    $('role-pick').addEventListener('change',()=>{$('role-result').textContent=roleCopy[$('role-pick').value];});
-
-    function calcRoi(){
-      const people=num('roi-users'),hours=num('roi-hours'),salary=num('roi-salary'),realize=num('roi-realize')/100,once=num('roi-once'),opex=num('roi-opex');
-      const gain=people*hours*12*(salary/174)*realize,net=gain-opex,monthly=net/12,payback=monthly>0?once/monthly:Infinity,firstYear=net-once,rate=once>0?firstYear/once*100:0;
-      $('roi-gain').textContent=money(gain);$('roi-net').textContent=money(net);$('roi-payback').textContent=Number.isFinite(payback)?payback.toFixed(1)+' 个月':'暂不回本';$('roi-rate').textContent=once>0?rate.toFixed(0)+'%':'—';
-      $('roi-verdict').textContent=net<=0?'当前输入下，预计年化效率价值未覆盖年运行成本；应重新核实可节省工时、实际采用率或运行成本。':'当前仅是基于假设的简单回收期估算；还需验证节省工时是否能转化为实际业务收益。';
-      $('roi-verdict').className='verdict'+(net<=0?' warn':'');
-    }
-    bind(['roi-users','roi-hours','roi-salary','roi-realize','roi-once','roi-opex'],calcRoi);calcRoi();
-
-    function calcQuote(){
-      const dev=num('q-dev-days')*num('q-dev-rate'),ai=num('q-ai-days')*num('q-ai-rate'),pm=num('q-pm-days')*num('q-pm-rate'),labor=dev+ai+pm,base=labor+num('q-infra'),price=base*(1+num('q-risk')/100)*(1+num('q-margin')/100),days=num('q-dev-days')+num('q-ai-days')+num('q-pm-days');
-      $('q-labor').textContent=money(labor);$('q-base').textContent=money(base);$('q-price').textContent=money(price);$('q-days').textContent=days.toLocaleString('zh-CN');
-      $('q-verdict').textContent='讨论价仅由当前人天、预留和成本加成推导。正式报价前需拆清需求变更、验收、税费、模型用量、运维 SLA 和客户采购流程。';
-    }
-    bind(['q-dev-days','q-dev-rate','q-ai-days','q-ai-rate','q-pm-days','q-pm-rate','q-infra','q-risk','q-margin'],calcQuote);calcQuote();
-
-    const csvRows={
-      brief:[['字段','当前整理','状态'],['项目名称','FDE Discovery Lab · 多租户知识库 Wiki SaaS','已整理'],['技术方向','FastAPI / PostgreSQL / Ollama / RAG / LLM Wiki','已整理'],['客户与行业','','待补充'],['用户规模与问答量','','待补充'],['部署方式','','待确认']],
-      scope:[['模块','MVP 目标','边界'],['租户与组织','平台、租户、组织单元、成员和角色','服务端隔离'],['资料导入','Markdown / UTF-8 文本','不含 PDF / Office 解析'],['RAG','权限过滤、片段检索、引用回答','先验证引用质量'],['Wiki','来源关联、草稿审核、发布状态','管理员审核后发布'],['模型','Ollama 聊天与向量化','托管端点需网络可达']],
-      roles:[['角色','范围','可操作内容'],['平台管理员','平台','创建租户和首位租户管理员'],['租户管理员','单一租户','管理本租户成员、组织树、知识库'],['组织单元管理员','自身单元及后代','管理授权范围内成员和资料'],['普通成员','个人授权范围','提问、阅读已发布 Wiki']],
-      acceptance:[['验收项','状态'],['跨租户读取默认拒绝','待验收'],['组织单元仅允许本单元及后代','待验收'],['RAG 回答引用可回到授权片段','待验收'],['Wiki 草稿审核后方可发布','待验收'],['数据库备份与恢复流程','待验收'],['托管 API 可访问模型端点','待验收'],['日志、延迟和错误率可观察','待验收']],
-      roi:[['指标','当前输入'],['覆盖用户数',num('roi-users')],['每人每月节省工时',num('roi-hours')],['月综合人工成本（元）',num('roi-salary')],['收益兑现比例（%）',num('roi-realize')],['一次性实施投入（元）',num('roi-once')],['年运行成本（元）',num('roi-opex')],['预计年化效率价值（元）',$('roi-gain').textContent],['扣运行费后年净收益（元）',$('roi-net').textContent],['简单回本期',$('roi-payback').textContent]],
-      quote:[['指标','当前输入或结果'],['开发人天',num('q-dev-days')],['AI / 检索人天',num('q-ai-days')],['产品 / 交付人天',num('q-pm-days')],['开发人天单价',num('q-dev-rate')],['AI 人天单价',num('q-ai-rate')],['交付人天单价',num('q-pm-rate')],['首年基础设施估算',num('q-infra')],['人力成本',$('q-labor').textContent],['基础成本',$('q-base').textContent],['带风险与加成的讨论价',$('q-price').textContent]]
-    };
-    function csvEscape(value){const text=String(value??'');return '"'+text.replaceAll('"','""')+'"';}
-    function downloadCsv(key){const rows=csvRows[key];if(!rows)return;const csv='\ufeff'+rows.map(row=>row.map(csvEscape).join(',')).join('\r\n');const blob=new Blob([csv],{type:'text/csv;charset=utf-8'});const url=URL.createObjectURL(blob);const link=document.createElement('a');link.href=url;link.download='fde-knowledge-'+key+'.csv';document.body.appendChild(link);link.click();link.remove();URL.revokeObjectURL(url);showToast('已在浏览器生成 CSV');}
-    document.querySelectorAll('[data-csv]').forEach(button=>button.addEventListener('click',()=>downloadCsv(button.dataset.csv)));
-
-    function updateChecks(){const boxes=[...document.querySelectorAll('#acceptance input[type=checkbox]')];const done=boxes.filter(box=>box.checked).length;$('check-progress').textContent='已完成 '+done+' / '+boxes.length+' 项';}
-    document.querySelectorAll('#acceptance input[type=checkbox]').forEach(box=>box.addEventListener('change',updateChecks));updateChecks();
-
-    const chapterLinks=[...document.querySelectorAll('.chapters a')];const observed=[...document.querySelectorAll('main section[id]')];
-    if('IntersectionObserver' in window){const observer=new IntersectionObserver(entries=>{entries.forEach(entry=>{if(entry.isIntersecting){chapterLinks.forEach(link=>link.classList.toggle('active',link.hash==='#'+entry.target.id));}});},{rootMargin:'-18% 0px -70% 0px'});observed.forEach(section=>observer.observe(section));}
-  </script>
+  loadState();
+  renderStage();
+  document.getElementById("stageTabs").addEventListener("click", function (event) {
+    var button = event.target.closest("[data-stage]");
+    if (!button) return;
+    var index = stages.findIndex(function (stage) { return stage.id === button.getAttribute("data-stage"); });
+    if (index >= 0) setStage(index);
+  });
+  document.getElementById("saveBtn").addEventListener("click", function () { saveState(true); });
+  document.getElementById("completeBtn").addEventListener("click", function () {
+    state.complete[current.id] = !state.complete[current.id];
+    saveState(false);
+    renderStage();
+    toast(state.complete[current.id] ? "已标记完成" : "已取消完成标记");
+  });
+  document.getElementById("nextBtn").addEventListener("click", function () { setStage(activeIndex === stages.length - 1 ? 0 : activeIndex + 1); });
+  document.getElementById("exportBtn").addEventListener("click", exportNotes);
+  document.getElementById("focusBtn").addEventListener("click", function () {
+    document.getElementById("workbench").scrollIntoView({ behavior: "smooth", block: "start" });
+    var first = document.querySelector("[data-field]");
+    if (first) first.focus({ preventScroll: true });
+  });
+}());
+</script>
 </body>
 </html>
