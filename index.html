@@ -2,380 +2,325 @@
 <html lang="zh-CN">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#f4f7fb">
-  <meta name="description" content="知库助手：面向团队的多租户知识库、RAG 问答与来源可追溯 Wiki 演示。">
-  <title>知库助手 · 企业知识 Wiki</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#f5f6f4">
+  <meta name="description" content="FDE Discovery Lab 多租户知识库 SaaS 方案实战课件，含 RAG、权限、Ollama、ROI 与交付清单互动测算。">
+  <title>FDE 知库助手 · 项目方案实战课件</title>
   <style>
     :root {
-      color-scheme: light;
-      --ink: #17283f;
-      --muted: #718096;
-      --line: #e7edf4;
-      --paper: #ffffff;
-      --canvas: #f4f7fb;
-      --blue: #3869e8;
-      --blue-soft: #edf3ff;
-      --mint: #d9f5ee;
-      --navy: #13233a;
-      --navy-2: #1d304b;
-      --shadow: 0 18px 48px rgba(22, 42, 69, .08);
-      font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+      color-scheme: light dark;
+      --bg:#f5f6f4; --surface:#fff; --surface2:#eef1ee; --ink:#1b2220; --ink2:#4c5852; --ink3:#75827b;
+      --line:#d9ded9; --line2:#c6cec7; --red:#b3271e; --red-soft:#fbeae8; --teal:#0d6e5f; --teal-soft:#e3f2ee;
+      --amber:#9a6206; --amber-soft:#faf0da; --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+      --sans:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",system-ui,sans-serif;
+      --serif:"Songti SC","STSong","SimSun",serif;
     }
-    * { box-sizing: border-box; }
-    body { margin: 0; min-width: 320px; color: var(--ink); background: var(--canvas); font-size: 15px; }
-    button, input, textarea { font: inherit; }
-    button { cursor: pointer; }
-    .shell { min-height: 100vh; display: grid; grid-template-columns: 248px minmax(0, 1fr); }
-    .sidebar { background: var(--navy); color: #e7edf6; display: flex; flex-direction: column; padding: 23px 16px 18px; }
-    .brand { display: flex; align-items: center; gap: 11px; padding: 0 9px 25px; }
-    .brand-mark { width: 38px; height: 38px; border-radius: 13px; display: grid; place-items: center; background: linear-gradient(145deg, #72d8c1, #4c8efa); color: #102a45; font-weight: 800; letter-spacing: -1px; box-shadow: 0 8px 20px rgba(82, 183, 205, .22); }
-    .brand-title { font-size: 17px; font-weight: 700; letter-spacing: .2px; }
-    .brand-sub { display: block; color: #8fa2bd; font-size: 11px; font-weight: 500; margin-top: 3px; }
-    .workspace { padding: 12px 12px; margin: 0 2px 22px; border: 1px solid rgba(255,255,255,.1); border-radius: 12px; background: rgba(255,255,255,.055); display: flex; align-items: center; gap: 10px; }
-    .workspace-icon { display: grid; place-items: center; width: 31px; height: 31px; border-radius: 9px; color: #95d9cf; background: rgba(93,201,185,.13); font-size: 14px; font-weight: 700; }
-    .workspace-label { font-size: 12px; color: #8fa2bd; margin-bottom: 3px; }
-    .workspace-name { font-size: 13px; color: #f6f8fc; font-weight: 600; }
-    .nav-label { color: #8295af; font-size: 11px; letter-spacing: 1px; padding: 0 12px 9px; text-transform: uppercase; }
-    .nav { display: grid; gap: 5px; }
-    .nav button { border: 0; border-radius: 10px; padding: 11px 12px; color: #bac6d6; background: transparent; display: flex; align-items: center; gap: 12px; text-align: left; transition: .18s ease; }
-    .nav button:hover { background: rgba(255,255,255,.07); color: #fff; }
-    .nav button.active { color: #fff; background: #28436a; box-shadow: inset 3px 0 #74d7c1; }
-    .nav-icon { width: 19px; text-align: center; color: #8fa5c1; font-size: 15px; }
-    .nav button.active .nav-icon { color: #8ae0cc; }
-    .sidebar-bottom { margin-top: auto; padding: 18px 9px 0; border-top: 1px solid rgba(255,255,255,.1); }
-    .user-line { display: flex; align-items: center; gap: 10px; }
-    .avatar { width: 34px; height: 34px; border-radius: 50%; display: grid; place-items: center; color: #163052; background: #c4eee5; font-size: 12px; font-weight: 800; }
-    .user-name { font-size: 13px; font-weight: 600; color: #f1f5fa; }
-    .user-role { font-size: 11px; color: #8fa2bd; margin-top: 3px; }
-    .main { min-width: 0; }
-    .topbar { height: 74px; padding: 0 clamp(20px, 4vw, 54px); display: flex; align-items: center; justify-content: space-between; gap: 20px; background: rgba(255,255,255,.85); border-bottom: 1px solid var(--line); }
-    .breadcrumbs { color: var(--muted); font-size: 13px; }
-    .breadcrumbs strong { color: var(--ink); font-weight: 650; }
-    .top-actions { display: flex; align-items: center; gap: 12px; }
-    .mode-pill { border-radius: 999px; padding: 7px 11px; color: #815e19; background: #fff4d6; font-size: 12px; font-weight: 650; display: inline-flex; align-items: center; gap: 7px; }
-    .mode-dot { width: 7px; height: 7px; background: #e7aa2f; border-radius: 50%; }
-    .top-avatar { width: 34px; height: 34px; border-radius: 50%; display: grid; place-items: center; background: #e5ecf5; color: #425873; font-size: 12px; font-weight: 700; }
-    .content { width: min(1220px, 100%); padding: 37px clamp(20px, 4vw, 54px) 70px; margin: 0 auto; }
-    .page { display: none; animation: enter .22s ease; }
-    .page.active { display: block; }
-    @keyframes enter { from { opacity: .3; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
-    .eyebrow { color: var(--blue); text-transform: uppercase; letter-spacing: 1.6px; font-size: 11px; font-weight: 750; margin-bottom: 10px; }
-    h1 { margin: 0; font-size: clamp(27px, 3vw, 36px); line-height: 1.16; letter-spacing: -.7px; }
-    .lead { max-width: 720px; color: var(--muted); line-height: 1.75; margin: 12px 0 0; }
-    .heading-row { display: flex; align-items: flex-end; justify-content: space-between; gap: 20px; margin-bottom: 26px; }
-    .button { border: 1px solid #dfe6ef; border-radius: 10px; background: #fff; color: #29415f; padding: 10px 15px; font-weight: 650; transition: .18s ease; }
-    .button:hover { transform: translateY(-1px); box-shadow: 0 8px 18px rgba(22,42,69,.09); }
-    .button.primary { background: var(--blue); border-color: var(--blue); color: #fff; }
-    .button.primary:hover { background: #2f5dd0; }
-    .button.ghost { background: transparent; }
-    .hero { position: relative; display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(250px, .75fr); overflow: hidden; min-height: 250px; border-radius: 20px; background: #172d49; color: white; box-shadow: var(--shadow); }
-    .hero-copy { padding: 31px 35px; position: relative; z-index: 1; }
-    .hero .eyebrow { color: #85decb; margin-bottom: 12px; }
-    .hero h2 { font-size: clamp(25px, 3vw, 34px); letter-spacing: -.65px; margin: 0; line-height: 1.25; max-width: 570px; }
-    .hero p { color: #becbdd; line-height: 1.7; max-width: 570px; margin: 12px 0 23px; }
-    .hero-actions { display: flex; gap: 10px; flex-wrap: wrap; }
-    .hero .button.primary { color: #17344e; border-color: #81dfcc; background: #81dfcc; }
-    .hero .button.ghost { color: #e6effa; border-color: rgba(255,255,255,.23); }
-    .hero-art { position: relative; min-height: 220px; background: radial-gradient(circle at 55% 45%, rgba(96,195,201,.3), transparent 33%), linear-gradient(140deg, rgba(60,104,151,.22), rgba(31,59,89,.18)); }
-    .orb { position: absolute; border-radius: 50%; border: 1px solid rgba(151,223,225,.5); box-shadow: inset 0 0 30px rgba(101,204,194,.16), 0 0 30px rgba(89,168,202,.1); }
-    .orb.one { width: 175px; height: 175px; right: 45px; top: 30px; }
-    .orb.two { width: 115px; height: 115px; right: 75px; top: 60px; border-style: dashed; border-color: rgba(149,218,212,.48); }
-    .orb.three { width: 53px; height: 53px; right: 106px; top: 92px; background: linear-gradient(140deg, #78d8c6, #4a90e7); border: 0; }
-    .orbit-dot { position: absolute; width: 12px; height: 12px; border-radius: 50%; background: #f0cf82; right: 184px; top: 47px; box-shadow: 0 0 16px #f0cf82; }
-    .art-label { position: absolute; right: 40px; bottom: 23px; color: #9bb0c8; font-size: 11px; letter-spacing: 1.1px; }
-    .stats { display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: 14px; margin: 19px 0 26px; }
-    .stat { padding: 17px 18px; background: var(--paper); border: 1px solid var(--line); border-radius: 14px; }
-    .stat-top { display: flex; align-items: center; justify-content: space-between; gap: 10px; color: var(--muted); font-size: 12px; }
-    .stat-icon { width: 31px; height: 31px; display: grid; place-items: center; background: var(--blue-soft); color: var(--blue); border-radius: 9px; font-weight: 750; }
-    .stat-value { margin-top: 14px; font-size: 20px; font-weight: 750; letter-spacing: -.25px; }
-    .stat-foot { color: #8997a9; font-size: 11px; margin-top: 4px; }
-    .grid-2 { display: grid; grid-template-columns: minmax(0,1.1fr) minmax(285px,.9fr); gap: 17px; }
-    .card { background: var(--paper); border: 1px solid var(--line); border-radius: 15px; box-shadow: 0 8px 23px rgba(22,42,69,.035); }
-    .card-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 19px 21px 0; }
-    .card-title { font-size: 15px; font-weight: 700; }
-    .card-note { color: #8a98aa; font-size: 11px; }
-    .card-body { padding: 18px 21px 21px; }
-    .doc-row { display: flex; align-items: center; gap: 13px; padding: 12px 0; border-bottom: 1px solid #f0f3f7; }
-    .doc-row:last-child { border-bottom: 0; padding-bottom: 0; }
-    .doc-icon { width: 36px; height: 39px; display: grid; place-items: center; border: 1px solid #e5eaf1; border-radius: 8px; color: var(--blue); background: #f7f9fc; font-size: 10px; font-weight: 800; }
-    .doc-title { font-size: 13px; font-weight: 650; }
-    .doc-meta { color: #8a98aa; font-size: 11px; margin-top: 4px; }
-    .tag { display: inline-flex; align-items: center; border-radius: 999px; padding: 5px 9px; background: #eef7f5; color: #37806e; font-size: 10px; font-weight: 700; }
-    .timeline { display: grid; gap: 17px; }
-    .timeline-row { display: grid; grid-template-columns: 29px 1fr; gap: 11px; }
-    .timeline-icon { width: 28px; height: 28px; border-radius: 9px; background: var(--blue-soft); color: var(--blue); display: grid; place-items: center; font-size: 12px; font-weight: 800; }
-    .timeline-copy { font-size: 12px; line-height: 1.55; }
-    .timeline-copy strong { display: block; font-size: 12px; margin-bottom: 3px; }
-    .timeline-copy span { color: #8b98a8; font-size: 11px; }
-    .notice { display: flex; gap: 11px; align-items: flex-start; border: 1px solid #d9e7ff; background: #f2f7ff; color: #415c82; border-radius: 12px; padding: 13px 15px; margin-top: 17px; font-size: 12px; line-height: 1.6; }
-    .notice-symbol { color: var(--blue); font-weight: 800; }
-    .section-grid { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 15px; }
-    .feature-card { padding: 22px; }
-    .feature-icon { width: 43px; height: 43px; border-radius: 13px; display: grid; place-items: center; color: #2c68dc; background: #eaf1ff; font-size: 18px; font-weight: 800; margin-bottom: 15px; }
-    .feature-card h3 { margin: 0; font-size: 16px; }
-    .feature-card p { color: var(--muted); line-height: 1.65; font-size: 13px; margin: 8px 0 0; }
-    .demo-badge { font-size: 10px; background: #f4f0ff; color: #7755b7; padding: 5px 8px; border-radius: 999px; font-weight: 700; }
-    .searchbar { display: flex; gap: 9px; margin-bottom: 17px; }
-    .input { width: 100%; padding: 12px 14px; border-radius: 10px; border: 1px solid #dce4ef; background: white; color: var(--ink); outline: none; }
-    .input:focus, textarea:focus { border-color: #7da0f7; box-shadow: 0 0 0 3px rgba(56,105,232,.1); }
-    .kb-table { width: 100%; border-collapse: collapse; }
-    .kb-table th { text-align: left; padding: 11px 14px; color: #8b98aa; font-size: 11px; font-weight: 650; border-bottom: 1px solid var(--line); }
-    .kb-table td { padding: 15px 14px; border-bottom: 1px solid #f0f3f7; font-size: 13px; }
-    .kb-table tr:last-child td { border-bottom: 0; }
-    .kb-name { display: flex; align-items: center; gap: 11px; font-weight: 650; }
-    .kb-symbol { width: 33px; height: 33px; display: grid; place-items: center; border-radius: 10px; color: #3169e5; background: #edf3ff; font-size: 12px; font-weight: 800; }
-    .question-layout { display: grid; grid-template-columns: minmax(0,1.2fr) minmax(270px,.8fr); gap: 17px; }
-    .ask-box { padding: 20px; }
-    textarea { display: block; width: 100%; min-height: 116px; resize: vertical; padding: 14px; border: 1px solid #dce4ef; border-radius: 11px; background: #fbfcfe; color: var(--ink); outline: none; line-height: 1.6; }
-    .ask-footer { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-top: 12px; }
-    .ask-hint { color: #8b98aa; font-size: 11px; }
-    .suggestions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
-    .suggestion { border: 1px solid #e3eaf4; border-radius: 999px; background: #fff; padding: 7px 10px; color: #60728b; font-size: 11px; }
-    .suggestion:hover { border-color: #a9bef3; color: var(--blue); }
-    .answer { min-height: 108px; color: #42546a; line-height: 1.75; font-size: 13px; }
-    .answer.empty { color: #8b98aa; }
-    .citation-list { display: grid; gap: 8px; margin-top: 15px; }
-    .citation { display: flex; align-items: center; gap: 9px; padding: 10px; border-radius: 9px; background: #f7f9fc; border: 1px solid #edf1f6; color: #53677f; font-size: 11px; }
-    .citation-mark { width: 21px; height: 21px; border-radius: 6px; background: #e6eefc; color: #3869e8; display: grid; place-items: center; font-weight: 800; }
-    .graph-wrap { position: relative; min-height: 400px; overflow: hidden; background: #fbfcff; border-radius: 12px; border: 1px solid #ecf0f5; }
-    .graph-wrap::before, .graph-wrap::after { content: ""; position: absolute; inset: -30%; background-image: radial-gradient(#dbe5f1 .85px, transparent .85px); background-size: 18px 18px; opacity: .56; pointer-events: none; }
-    .graph-svg { position: absolute; inset: 0; width: 100%; height: 100%; }
-    .graph-line { stroke: #cbd7e7; stroke-width: 1.6; }
-    .node { position: absolute; z-index: 1; transform: translate(-50%,-50%); min-width: 84px; padding: 12px 13px; border: 1px solid #d8e4f3; border-radius: 12px; color: #34516e; background: #fff; box-shadow: 0 8px 20px rgba(30,66,110,.08); text-align: center; font-size: 11px; font-weight: 650; }
-    .node.core { background: #e9f2ff; border-color: #a8c6f7; color: #2d60c5; min-width: 110px; padding: 16px; }
-    .node.mint { background: #ecf9f5; border-color: #b8e4d8; color: #287261; }
-    .node:hover { border-color: var(--blue); transform: translate(-50%,-50%) scale(1.04); }
-    .graph-legend { display: flex; gap: 14px; flex-wrap: wrap; color: #75859a; font-size: 11px; margin-top: 13px; }
-    .legend-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #8db1ef; margin-right: 5px; }
-    .legend-dot.mint { background: #85cfbb; }
-    .legend-dot.gold { background: #e7c576; }
-    .role-table { width: 100%; border-collapse: collapse; }
-    .role-table th, .role-table td { text-align: left; padding: 14px 15px; border-bottom: 1px solid #edf1f6; font-size: 12px; line-height: 1.55; }
-    .role-table th { color: #8b98aa; font-size: 11px; }
-    .role-table tr:last-child td { border-bottom: 0; }
-    .role-name { font-weight: 700; color: #334b68; }
-    .role-chip { display: inline-block; border-radius: 7px; padding: 5px 8px; color: #3969ce; background: #eff4ff; font-size: 10px; font-weight: 700; white-space: nowrap; }
-    .onepager { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 0 26px; }
-    .field { padding: 17px 0; border-bottom: 1px solid #eef2f6; }
-    .field-label { color: #7b899a; font-size: 11px; margin-bottom: 7px; }
-    .field-value { color: #2c4059; font-size: 13px; line-height: 1.55; font-weight: 600; }
-    .field-value.pending { color: #a3823a; font-weight: 550; }
-    .footer { display: flex; justify-content: space-between; gap: 15px; margin-top: 28px; padding: 17px 2px 0; border-top: 1px solid var(--line); color: #94a0b0; font-size: 11px; }
-    .toast { position: fixed; right: 22px; bottom: 22px; z-index: 10; border-radius: 12px; background: #17304d; color: white; padding: 12px 16px; box-shadow: var(--shadow); font-size: 13px; opacity: 0; transform: translateY(10px); pointer-events: none; transition: .2s ease; }
-    .toast.show { opacity: 1; transform: translateY(0); }
-    @media (max-width: 950px) {
-      .shell { grid-template-columns: 210px minmax(0,1fr); }
-      .hero { grid-template-columns: 1fr .55fr; }
-      .stats { grid-template-columns: repeat(2,minmax(0,1fr)); }
-      .grid-2, .question-layout { grid-template-columns: 1fr; }
-    }
-    @media (max-width: 680px) {
-      .shell { display: block; }
-      .sidebar { padding: 13px 12px 11px; }
-      .brand { padding: 0 5px 12px; }
-      .workspace, .nav-label, .sidebar-bottom { display: none; }
-      .nav { display: flex; gap: 5px; overflow-x: auto; padding-bottom: 2px; }
-      .nav button { min-width: max-content; padding: 9px 10px; font-size: 12px; }
-      .nav-icon { width: auto; }
-      .topbar { height: 56px; padding: 0 16px; }
-      .breadcrumbs { font-size: 12px; }
-      .content { padding: 25px 16px 46px; }
-      .hero { display: block; min-height: auto; }
-      .hero-copy { padding: 24px; }
-      .hero-art { display: none; }
-      .stats { gap: 9px; }
-      .stat { padding: 13px; }
-      .stat-value { font-size: 17px; }
-      .section-grid, .onepager { grid-template-columns: 1fr; }
-      .heading-row { align-items: flex-start; flex-direction: column; }
-      .searchbar { flex-direction: column; }
-      .table-scroll { overflow-x: auto; }
-      .kb-table { min-width: 650px; }
-      .role-table { min-width: 640px; }
-      .footer { flex-direction: column; }
-    }
+    @media(prefers-color-scheme:dark){:root{--bg:#141816;--surface:#1d2320;--surface2:#252c28;--ink:#e8ece9;--ink2:#aebbb3;--ink3:#84928a;--line:#333b36;--line2:#454f48;--red:#ff7a6e;--red-soft:#3a2320;--teal:#4cc3ab;--teal-soft:#17332c;--amber:#e0aa4e;--amber-soft:#38300f}}
+    *{box-sizing:border-box}html{scroll-behavior:smooth;scroll-padding-top:88px}body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:16px;line-height:1.72;-webkit-font-smoothing:antialiased}
+    h1,h2,h3,h4,p,ul,ol,figure{margin:0}button,input,select{font:inherit}button{cursor:pointer}a{color:var(--teal)}.wrap{width:min(1100px,100%);margin:0 auto;padding:0 22px}.mono{font-family:var(--mono);font-variant-numeric:tabular-nums}.small{font-size:.88rem;color:var(--ink2)}
+    .hero{padding:46px 0 14px}.topline{display:flex;align-items:center;gap:10px;flex-wrap:wrap;color:var(--ink3);font-size:.78rem;letter-spacing:.08em}.topline strong{color:var(--teal);font-weight:800}.demo{border:1px solid var(--line2);border-radius:999px;padding:3px 9px;letter-spacing:0;background:var(--surface);color:var(--ink2)}
+    h1{font-family:var(--serif);font-size:clamp(2rem,5vw,3.25rem);line-height:1.23;letter-spacing:.01em;margin:16px 0 12px;font-weight:900;max-width:880px}h1 em{font-style:normal;color:var(--red)}.lede{max-width:760px;color:var(--ink2);font-size:1.06rem}.goals{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:11px;margin:24px 0 3px}.goal{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:13px 15px}.goal b{display:block;color:var(--red);font:600 .82rem var(--mono)}.goal span{font-size:.92rem}
+    nav.chapters{position:sticky;top:0;z-index:30;background:color-mix(in srgb,var(--bg) 92%,transparent);backdrop-filter:blur(10px);border-block:1px solid var(--line);padding:9px 0;margin-top:18px}.chapters .wrap{display:flex;gap:7px;overflow-x:auto;scrollbar-width:thin}.chapters a{white-space:nowrap;text-decoration:none;display:inline-flex;align-items:center;min-height:36px;padding:4px 11px;border:1px solid var(--line2);border-radius:999px;background:var(--surface);color:var(--ink);font-size:.83rem}.chapters a:hover,.chapters a.active{border-color:var(--teal);color:var(--teal)}.chapters .n{font:600 .77rem var(--mono);color:var(--red);margin-right:6px}
+    main{padding-bottom:44px}section{padding:43px 0 9px;scroll-margin-top:72px}.sec-head{display:flex;align-items:baseline;gap:13px;border-bottom:2px solid var(--ink);padding-bottom:10px;margin-bottom:21px}.sec-head .no{font:600 .98rem var(--mono);color:var(--red)}.sec-head h2{font:900 clamp(1.4rem,3.4vw,2rem)/1.3 var(--serif)}.sec-head .en{margin-left:auto;color:var(--ink3);font: .75rem var(--mono);letter-spacing:.08em;text-align:right}h3{font-size:1.12rem;font-weight:850;margin:25px 0 9px}h4{font-size:.98rem;font-weight:750;margin:16px 0 6px}p.body{max-width:58em;margin:0 0 12px}.muted{color:var(--ink2)}
+    .grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}.grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.card{background:var(--surface);border:1px solid var(--line);border-radius:11px;padding:16px 18px}.card h3,.card h4{margin-top:0}.card h3{font-size:1.02rem}.tag{display:inline-block;background:var(--teal-soft);color:var(--teal);border-radius:4px;padding:1px 8px;font-size:.74rem;font-weight:750;margin-bottom:7px}.tag.red{background:var(--red-soft);color:var(--red)}.tag.amber{background:var(--amber-soft);color:var(--amber)}
+    .callout{padding:13px 16px;border-radius:9px;margin:13px 0;font-size:.93rem}.callout.red{background:var(--red-soft)}.callout.teal{background:var(--teal-soft)}.callout.amber{background:var(--amber-soft)}.callout b{display:block;margin-bottom:2px}.callout.red b{color:var(--red)}.callout.teal b{color:var(--teal)}.callout.amber b{color:var(--amber)}
+    .steps{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px;margin:14px 0}.step{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:12px}.step .sn{display:block;font:600 .78rem var(--mono);color:var(--red);margin-bottom:3px}.step p{font-size:.88rem;color:var(--ink2)}
+    .blocks{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px;margin:14px 0}.block{background:var(--surface);border:1px solid var(--line);border-top:4px solid var(--teal);border-radius:8px;padding:12px}.block.red{border-top-color:var(--red)}.block .bn{font:.75rem var(--mono);color:var(--ink3)}.block h4{margin:2px 0 5px}.block p{font-size:.85rem;color:var(--ink2)}
+    .tblwrap{overflow-x:auto;margin:12px 0;border:1px solid var(--line);border-radius:9px;background:var(--surface)}table{width:100%;border-collapse:collapse;min-width:590px;font-size:.89rem}th,td{padding:9px 12px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}th{background:var(--surface2);font-weight:750;white-space:nowrap}tr:last-child td{border-bottom:0}.right{text-align:right}
+    .formula{background:var(--surface);border:1px solid var(--line2);border-radius:9px;padding:13px 16px;margin:12px 0;font: .92rem/1.9 var(--mono);overflow:auto;white-space:nowrap}.formula small{font: .82rem/1.55 var(--sans);color:var(--ink3);white-space:normal}
+    .calc{background:var(--surface);border:1px solid var(--line2);border-radius:12px;padding:18px;margin:14px 0}.calc-title{font-weight:850;font-size:1.04rem;display:flex;align-items:center;gap:9px;margin-bottom:3px}.calc-title:before{content:"";width:9px;height:9px;border-radius:50%;background:var(--red);flex:none}.calc-desc{font-size:.87rem;color:var(--ink2);margin-bottom:12px}.fields{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:11px 14px}.field label{display:block;font-size:.81rem;font-weight:750;color:var(--ink2);margin-bottom:4px}.field input,.field select{width:100%;min-height:40px;padding:7px 9px;border:1px solid var(--line2);border-radius:7px;background:var(--bg);color:var(--ink);font-family:var(--mono);font-size:.91rem}.field select{font-family:var(--sans)}.results{display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:9px;margin-top:14px}.result{background:var(--surface2);border-radius:8px;padding:10px 12px}.result .rl{font-size:.76rem;color:var(--ink2);font-weight:750}.result .rv{font:600 1.2rem var(--mono);margin-top:2px}.result .rv.red{color:var(--red)}.result .rs{font-size:.75rem;color:var(--ink3)}.verdict{margin-top:12px;border-radius:8px;padding:11px 14px;background:var(--teal-soft);font-size:.9rem}.verdict.warn{background:var(--amber-soft)}
+    .matrix{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px;margin:12px 0}.matrix .card{padding:13px}.matrix strong{display:block;color:var(--teal);font-size:.9rem;margin-bottom:3px}.matrix p{font-size:.84rem;color:var(--ink2)}
+    .graph{display:grid;grid-template-columns:1fr auto 1fr auto 1fr;align-items:center;gap:9px;margin:14px 0;padding:16px;background:var(--surface2);border-radius:10px}.node{border:1px solid var(--line2);background:var(--surface);border-radius:9px;padding:12px 9px;text-align:center;font-size:.86rem;font-weight:750}.node.main{border-color:var(--teal);color:var(--teal)}.arrow{color:var(--red);font:700 1.1rem var(--mono)}
+    .checklist{list-style:none;padding:0;margin:10px 0}.checklist li{padding:8px 4px;border-bottom:1px dashed var(--line);display:flex;gap:10px;align-items:flex-start}.checklist li:last-child{border:0}.checklist input{margin-top:5px;accent-color:var(--teal);width:17px;height:17px;flex:none}.checklist label{font-size:.92rem;cursor:pointer}.check-progress{font-size:.83rem;color:var(--ink2);margin-top:9px}
+    .button{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:38px;padding:6px 13px;border:1px solid var(--teal);border-radius:7px;background:var(--teal);color:#fff;font-size:.86rem;font-weight:750}.button.ghost{background:transparent;color:var(--teal)}.button:hover{filter:brightness(1.08)}.button:active{transform:translateY(1px)}.dl{display:flex;flex-wrap:wrap;gap:8px;margin:13px 0}.foot{border-top:1px solid var(--line);margin-top:38px;padding:17px 0 28px;color:var(--ink3);font-size:.8rem;display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap}.toast{position:fixed;right:18px;bottom:18px;z-index:40;padding:10px 14px;border-radius:9px;background:var(--ink);color:var(--bg);font-size:.85rem;box-shadow:0 12px 32px #0002;opacity:0;transform:translateY(8px);transition:.2s;pointer-events:none}.toast.show{opacity:1;transform:none}
+    @media(max-width:800px){.grid3{grid-template-columns:repeat(2,minmax(0,1fr))}.blocks{grid-template-columns:repeat(2,minmax(0,1fr))}.steps{grid-template-columns:repeat(2,minmax(0,1fr))}.matrix{grid-template-columns:1fr}.graph{grid-template-columns:1fr}.arrow{transform:rotate(90deg);text-align:center}.sec-head .en{display:none}}
+    @media(max-width:520px){.wrap{padding-inline:16px}.hero{padding-top:31px}.grid2,.grid3{grid-template-columns:1fr}.goal{padding:11px}.card,.calc{padding:14px}.chapters a{font-size:.79rem;padding-inline:9px}.sec-head{gap:9px}.foot{display:block}.foot span{display:block;margin:4px 0}}
   </style>
 </head>
 <body>
-  <div class="shell">
-    <aside class="sidebar">
-      <div class="brand">
-        <div class="brand-mark">知</div>
-        <div><div class="brand-title">知库助手</div><span class="brand-sub">FDE Discovery Lab</span></div>
+  <header class="wrap hero" id="top">
+    <div class="topline"><strong>FDE DISCOVERY LAB</strong><span>／</span><span>项目方案实战课件</span><span class="demo">静态交互演示</span></div>
+    <h1>把团队知识，变成<em>可追溯、可治理</em>的企业助手</h1>
+    <p class="lede">围绕你的多租户知识库 SaaS MVP，按需求边界、系统架构、租户权限、RAG、Ollama、Wiki 治理与项目回报逐章拆解。测算器只在本页本地运行，费率和业务规模均为可编辑的教学假设。</p>
+    <div class="goals">
+      <div class="goal"><b>01 · 定范围</b><span>明确一期做什么、暂不做什么</span></div>
+      <div class="goal"><b>02 · 讲架构</b><span>FastAPI、Harness、RAG、Ollama 串成闭环</span></div>
+      <div class="goal"><b>03 · 守边界</b><span>每次读取都按租户和组织权限校验</span></div>
+      <div class="goal"><b>04 · 算价值</b><span>用输入数据估成本、回本期与交付报价</span></div>
+    </div>
+  </header>
+
+  <nav class="chapters" aria-label="课件章节导航"><div class="wrap">
+    <a href="#brief"><span class="n">00</span>项目一页纸</a><a href="#ch1"><span class="n">01</span>MVP 边界</a><a href="#ch2"><span class="n">02</span>系统架构</a><a href="#ch3"><span class="n">03</span>租户权限</a><a href="#ch4"><span class="n">04</span>RAG 成本</a><a href="#ch5"><span class="n">05</span>部署容量</a><a href="#ch6"><span class="n">06</span>Harness 治理</a><a href="#ch7"><span class="n">07</span>Wiki 图谱</a><a href="#ch8"><span class="n">08</span>ROI 与报价</a><a href="#ch9"><span class="n">09</span>上线验收</a>
+  </div></nav>
+
+  <main class="wrap">
+    <section id="brief">
+      <div class="sec-head"><span class="no">00</span><h2>先用一页纸对齐项目事实</h2><span class="en">PROJECT BRIEF</span></div>
+      <p class="body">以下内容按现有仓库、项目说明和白板要求整理。没有资料支持的客户规模与业务量，明确留空，避免把示例数据当成真实承诺。</p>
+      <div class="tblwrap"><table><tbody>
+        <tr><th>项目名称</th><td>FDE Discovery Lab · 多租户知识库 Wiki SaaS</td><th>交付形态</th><td>Web 控制台 + FastAPI 服务</td></tr>
+        <tr><th>一期技术</th><td>FastAPI、PostgreSQL、Ollama、RAG、LLM Wiki</td><th>治理方式</th><td>AI Harness 编排、来源引用、审计、管理员审核</td></tr>
+        <tr><th>权限层级</th><td>平台管理员、租户管理员、组织单元管理员、成员</td><th>资料格式</th><td>Markdown / UTF-8 文本</td></tr>
+        <tr><th>客户与行业</th><td class="muted">待补充：项目一页纸 CSV 未填写</td><th>用户数与问答量</th><td class="muted">待补充：暂未提供规模数据</td></tr>
+      </tbody></table></div>
+      <div class="dl"><button class="button ghost" data-csv="brief">下载项目一页纸 CSV</button><button class="button ghost" data-csv="scope">下载 MVP 范围清单 CSV</button></div>
+      <div class="callout amber"><b>范围提醒</b>CSV 里的“青禾报销助手企业版”属于模板示例，未被当作你的客户项目。客户、规模、日请求量与目标部署环境仍需由项目方补充。</div>
+    </section>
+
+    <section id="ch1">
+      <div class="sec-head"><span class="no">01</span><h2>MVP 边界：先交付可验证的知识闭环</h2><span class="en">SCOPE & OUTCOME</span></div>
+      <p class="body">一期的目标不是堆齐所有 AI 能力，而是证明：用户能在授权范围内导入资料、检索、获得带来源的回答，并让管理员审核 Wiki 更新。</p>
+      <div class="blocks">
+        <div class="block"><span class="bn">01 / ACCESS</span><h4>账号与租户</h4><p>建立租户、成员、组织单元和角色；API 对资源做服务端授权。</p></div>
+        <div class="block"><span class="bn">02 / INGEST</span><h4>资料导入</h4><p>接收 Markdown 和 UTF-8 文本，分块并建立可检索索引。</p></div>
+        <div class="block"><span class="bn">03 / ANSWER</span><h4>RAG 问答</h4><p>按权限检索片段，生成回答并展示文档与片段引用。</p></div>
+        <div class="block red"><span class="bn">04 / GOVERN</span><h4>Wiki 草稿</h4><p>抽取实体和关系，保留来源；审核通过后再发布。</p></div>
       </div>
-      <div class="workspace">
-        <div class="workspace-icon">知</div>
-        <div><div class="workspace-label">当前空间</div><div class="workspace-name">知识运营中心</div></div>
+      <div class="grid2">
+        <article class="card"><span class="tag">一期纳入</span><h3>交付物</h3><ul><li>平台、租户与组织单元管理</li><li>角色和知识库范围校验</li><li>文本导入、分块、向量化与检索</li><li>带引用的问答与 Wiki 草稿审核</li><li>Harness 统一日志、校验与审计事件</li></ul></article>
+        <article class="card"><span class="tag red">需单独评估</span><h3>当前未承诺</h3><ul><li>PDF、Word、Excel 等 Office 文件解析</li><li>跨租户搜索、公开匿名问答</li><li>外部 SaaS 模型与私有化 GPU 的正式 SLA</li><li>海量向量检索优化、复杂知识图谱编辑器</li><li>生产级备份、灾备、计费与多区域部署</li></ul></article>
       </div>
-      <div class="nav-label">工作区</div>
-      <nav class="nav" aria-label="主导航">
-        <button class="active" data-page="overview"><span class="nav-icon">◫</span>项目概览</button>
-        <button data-page="library"><span class="nav-icon">▤</span>知识库</button>
-        <button data-page="ask"><span class="nav-icon">✳</span>智能问答</button>
-        <button data-page="wiki"><span class="nav-icon">⌘</span>Wiki 图谱</button>
-        <button data-page="roles"><span class="nav-icon">◇</span>分层权限</button>
-        <button data-page="brief"><span class="nav-icon">▧</span>项目一页纸</button>
-      </nav>
-      <div class="sidebar-bottom">
-        <div class="user-line"><div class="avatar">演</div><div><div class="user-name">演示工作区</div><div class="user-role">项目原型 · 无真实账号</div></div></div>
+      <h3>建议的交付节奏</h3><div class="steps">
+        <div class="step"><span class="sn">W1 · ALIGN</span><p>补齐业务量、租户数、数据权限和验收问题。</p></div><div class="step"><span class="sn">W2 · BUILD</span><p>打通租户、组织树、导入和授权边界。</p></div><div class="step"><span class="sn">W3 · RAG</span><p>完成检索、引用、拒答和质量评估样例。</p></div><div class="step"><span class="sn">W4 · PILOT</span><p>小范围试用，按验收结果决定扩展项。</p></div>
       </div>
-    </aside>
+      <div class="callout teal"><b>验收原则</b>每项功能都要能用一个可重复的场景验证：给定租户、用户、资料与问题，系统返回符合权限的内容和可核对来源。</div>
+    </section>
 
-    <main class="main">
-      <header class="topbar">
-        <div class="breadcrumbs">FDE Discovery Lab <span aria-hidden="true"> / </span> <strong id="crumb">项目概览</strong></div>
-        <div class="top-actions"><span class="mode-pill"><span class="mode-dot"></span>交互演示模式</span><div class="top-avatar">知</div></div>
-      </header>
-
-      <div class="content">
-        <section class="page active" id="page-overview">
-          <div class="heading-row">
-            <div><div class="eyebrow">Knowledge workspace</div><h1>项目概览</h1><p class="lead">把团队资料整理成可检索、可引用、可持续维护的知识空间。此页面根据你的多租户知识库 MVP 方案制作。</p></div>
-            <button class="button" data-go="brief">查看项目一页纸</button>
-          </div>
-          <div class="hero">
-            <div class="hero-copy">
-              <div class="eyebrow">FastAPI · RAG · Ollama · LLM Wiki</div>
-              <h2>让每个答案，都能回到它的来源。</h2>
-              <p>按租户与组织单元隔离知识；通过 Harness 编排检索、模型调用、引用校验和审计；由管理员审核 Wiki 草稿后再发布。</p>
-              <div class="hero-actions"><button class="button primary" data-go="ask">试用演示问答</button><button class="button ghost" data-go="wiki">查看知识图谱</button></div>
-            </div>
-            <div class="hero-art" aria-hidden="true"><div class="orb one"></div><div class="orb two"></div><div class="orb three"></div><div class="orbit-dot"></div><div class="art-label">GROUNDED KNOWLEDGE</div></div>
-          </div>
-          <div class="stats">
-            <div class="stat"><div class="stat-top"><span>核心模块</span><span class="stat-icon">▤</span></div><div class="stat-value">知识库 · RAG</div><div class="stat-foot">文本分块与授权范围检索</div></div>
-            <div class="stat"><div class="stat-top"><span>生成治理</span><span class="stat-icon">✳</span></div><div class="stat-value">AI Harness</div><div class="stat-foot">引用校验、审计与质量信号</div></div>
-            <div class="stat"><div class="stat-top"><span>知识组织</span><span class="stat-icon">⌘</span></div><div class="stat-value">LLM Wiki</div><div class="stat-foot">带来源的实体关系与草稿</div></div>
-            <div class="stat"><div class="stat-top"><span>访问控制</span><span class="stat-icon">◇</span></div><div class="stat-value">分层权限</div><div class="stat-foot">平台、租户、单元、成员</div></div>
-          </div>
-          <div class="grid-2">
-            <article class="card"><div class="card-head"><div class="card-title">项目资料</div><span class="demo-badge">演示内容</span></div><div class="card-body">
-              <div class="doc-row"><div class="doc-icon">MD</div><div style="flex:1"><div class="doc-title">多租户知识库 MVP 技术方案</div><div class="doc-meta">项目文档 · 来源引用示例</div></div><span class="tag">已纳入方案</span></div>
-              <div class="doc-row"><div class="doc-icon">MD</div><div style="flex:1"><div class="doc-title">分层权限与知识隔离规则</div><div class="doc-meta">项目规则 · 租户 / 组织单元</div></div><span class="tag">演示用</span></div>
-              <div class="doc-row"><div class="doc-icon">API</div><div style="flex:1"><div class="doc-title">RAG 问答与 Wiki 流程</div><div class="doc-meta">产品流程 · 可追溯回答</div></div><span class="tag">演示用</span></div>
-            </div></article>
-            <article class="card"><div class="card-head"><div class="card-title">项目流程</div><span class="card-note">按现有 MVP 方案整理</span></div><div class="card-body"><div class="timeline">
-              <div class="timeline-row"><div class="timeline-icon">1</div><div class="timeline-copy"><strong>建立租户与组织树</strong><span>平台管理员创建租户；租户管理员维护成员和组织单元</span></div></div>
-              <div class="timeline-row"><div class="timeline-icon">2</div><div class="timeline-copy"><strong>导入授权资料</strong><span>支持 UTF-8 文本与 Markdown 的 MVP 流程</span></div></div>
-              <div class="timeline-row"><div class="timeline-icon">3</div><div class="timeline-copy"><strong>检索、回答与审核</strong><span>回答附引用；Wiki 草稿保留来源并等待管理员审核</span></div></div>
-            </div></div></article>
-          </div>
-          <div class="notice"><span class="notice-symbol">i</span><span>当前是静态交互演示页：示例问答不会调用线上 FastAPI、PostgreSQL 或 Ollama，也不会保存你输入的内容。真实后端部署需要再配置托管服务、数据库和可访问的模型端点。</span></div>
-        </section>
-
-        <section class="page" id="page-library">
-          <div class="heading-row"><div><div class="eyebrow">Knowledge bases</div><h1>知识库</h1><p class="lead">知识库可以按租户共享，也可以限制到一个组织单元。下面的条目是用于展示交互的示例内容。</p></div><span class="mode-pill"><span class="mode-dot"></span>示例资料</span></div>
-          <div class="card"><div class="card-head"><div class="card-title">知识库列表</div><span class="card-note">无真实数据连接</span></div><div class="card-body table-scroll"><table class="kb-table"><thead><tr><th>知识库</th><th>可见范围</th><th>资料格式</th><th>状态</th></tr></thead><tbody>
-            <tr><td><div class="kb-name"><span class="kb-symbol">技</span>技术方案与架构</div></td><td>租户共享</td><td>Markdown / UTF-8 文本</td><td><span class="tag">演示</span></td></tr>
-            <tr><td><div class="kb-name"><span class="kb-symbol">权</span>组织权限与隔离</div></td><td>组织单元</td><td>Markdown / UTF-8 文本</td><td><span class="tag">演示</span></td></tr>
-            <tr><td><div class="kb-name"><span class="kb-symbol">流</span>问答与 Wiki 流程</div></td><td>租户共享</td><td>Markdown / UTF-8 文本</td><td><span class="tag">演示</span></td></tr>
-          </tbody></table></div></div>
-          <div class="notice"><span class="notice-symbol">i</span><span>项目 MVP 当前描述的是 Markdown / UTF-8 文本导入。PDF 与 Office 文件解析未列入一期范围。</span></div>
-        </section>
-
-        <section class="page" id="page-ask">
-          <div class="heading-row"><div><div class="eyebrow">Grounded answers</div><h1>智能问答</h1><p class="lead">演示租户范围检索，并在回答下附上来源。当前回答由浏览器内置的示例逻辑生成。</p></div></div>
-          <div class="question-layout">
-            <article class="card ask-box"><div class="card-title" style="margin-bottom:15px">向知识空间提问</div><textarea id="question" placeholder="例如：普通用户可以做哪些操作？"></textarea><div class="ask-footer"><span class="ask-hint">本演示不会发送或保存输入内容</span><button class="button primary" id="ask-button">生成演示回答</button></div><div class="suggestions"><button class="suggestion" data-question="普通用户能访问哪些知识？">普通用户能访问哪些知识？</button><button class="suggestion" data-question="Wiki 内容什么时候会发布？">Wiki 内容什么时候会发布？</button><button class="suggestion" data-question="MVP 支持导入哪些文件？">MVP 支持导入哪些文件？</button></div></article>
-            <article class="card"><div class="card-head"><div class="card-title">回答与来源</div><span class="demo-badge">本地示例</span></div><div class="card-body"><div class="answer empty" id="answer">提交一个示例问题后，这里会显示演示回答。真实 RAG 回答应从当前用户有权限的知识库中检索，并给出文档与片段引用。</div><div class="citation-list" id="citations"></div></div></article>
-          </div>
-        </section>
-
-        <section class="page" id="page-wiki">
-          <div class="heading-row"><div><div class="eyebrow">Source-linked knowledge</div><h1>Wiki 图谱</h1><p class="lead">把资料中的概念和关系组织成可浏览的知识图谱。生成结果保留来源，进入审核后才可发布。</p></div><span class="mode-pill"><span class="mode-dot"></span>图谱示意</span></div>
-          <article class="card"><div class="card-head"><div class="card-title">知识关系示意</div><span class="card-note">点击节点查看说明</span></div><div class="card-body">
-            <div class="graph-wrap"><svg class="graph-svg" viewBox="0 0 800 400" preserveAspectRatio="none" aria-hidden="true"><line class="graph-line" x1="400" y1="202" x2="190" y2="90"/><line class="graph-line" x1="400" y1="202" x2="620" y2="88"/><line class="graph-line" x1="400" y1="202" x2="190" y2="315"/><line class="graph-line" x1="400" y1="202" x2="622" y2="315"/><line class="graph-line" x1="190" y1="90" x2="620" y2="88"/><line class="graph-line" x1="190" y1="315" x2="622" y2="315"/></svg>
-              <button class="node core" style="left:50%;top:50%" data-node="知识空间">知识空间</button>
-              <button class="node" style="left:24%;top:23%" data-node="租户隔离">租户隔离</button>
-              <button class="node mint" style="left:77%;top:22%" data-node="RAG 检索">RAG 检索</button>
-              <button class="node mint" style="left:24%;top:79%" data-node="组织权限">组织权限</button>
-              <button class="node" style="left:78%;top:79%" data-node="来源引用">来源引用</button>
-            </div>
-            <div class="graph-legend"><span><i class="legend-dot"></i>核心概念</span><span><i class="legend-dot mint"></i>功能模块</span><span><i class="legend-dot gold"></i>关系由项目方案示意</span></div>
-            <div class="notice" id="node-note"><span class="notice-symbol">i</span><span>点击图谱节点查看概念说明。该示意对应项目技术方案，不是已生成的租户数据。</span></div>
-          </div></article>
-        </section>
-
-        <section class="page" id="page-roles">
-          <div class="heading-row"><div><div class="eyebrow">Tenant-aware access</div><h1>分层权限</h1><p class="lead">权限必须在服务端按租户、角色和组织单元校验；隐藏界面按钮不能替代访问控制。</p></div></div>
-          <article class="card"><div class="card-head"><div class="card-title">MVP 角色与范围</div><span class="card-note">依据项目技术方案</span></div><div class="card-body table-scroll"><table class="role-table"><thead><tr><th>角色</th><th>管理范围</th><th>知识访问</th><th>可执行操作</th></tr></thead><tbody>
-            <tr><td><span class="role-chip">平台管理员</span></td><td>平台级租户</td><td>默认不能读取租户文档正文</td><td>创建租户和首位租户管理员</td></tr>
-            <tr><td><span class="role-chip">租户管理员</span></td><td>单一租户</td><td>本租户全部组织单元</td><td>管理成员、组织树和知识库</td></tr>
-            <tr><td><span class="role-chip">组织单元管理员</span></td><td>所属单元及其子单元</td><td>授权范围内的知识库</td><td>管理范围内成员和资料</td></tr>
-            <tr><td><span class="role-chip">普通用户</span></td><td>个人及明确授权范围</td><td>租户共享或所在单元知识库</td><td>提问、查看已发布 Wiki</td></tr>
-          </tbody></table></div></article>
-          <div class="notice"><span class="notice-symbol">i</span><span>平台管理员不会因平台角色自动获得租户文档访问权；跨租户访问默认拒绝。所有业务 API 需要做服务端授权检查。</span></div>
-        </section>
-
-        <section class="page" id="page-brief">
-          <div class="heading-row"><div><div class="eyebrow">Project one-pager</div><h1>项目一页纸</h1><p class="lead">根据现有白板方案与仓库文档整理。CSV 模板中未填写的客户、规模和业务量仍保留为待补充；模板里的青禾示例没有当作你的项目。</p></div></div>
-          <article class="card"><div class="card-head"><div class="card-title">项目概况</div><span class="demo-badge">按已有资料整理</span></div><div class="card-body"><div class="onepager">
-            <div class="field"><div class="field-label">项目名称</div><div class="field-value">FDE Discovery Lab · 多租户知识库 Wiki SaaS</div></div>
-            <div class="field"><div class="field-label">客户 / 行业 / 牵头部门</div><div class="field-value pending">待补充：CSV 模板未填写</div></div>
-            <div class="field"><div class="field-label">用户与关键角色</div><div class="field-value">平台管理员、租户管理员、组织单元管理员、普通用户；人数待补充</div></div>
-            <div class="field"><div class="field-label">业务量</div><div class="field-value pending">待补充：日均或月均知识请求量未提供</div></div>
-            <div class="field"><div class="field-label">数据与资料</div><div class="field-value">MVP 计划导入 UTF-8 文本或 Markdown；PostgreSQL 保存业务数据</div></div>
-            <div class="field"><div class="field-label">模型与部署</div><div class="field-value">Ollama 本地推理；托管环境需要额外配置可从云端访问的模型端点</div></div>
-          </div></div></article>
-          <div class="notice"><span class="notice-symbol">i</span><span>CSV 是空白模板，除了标注为示例的青禾报销助手条目外，没有你的客户或规模数据。此页面只纳入此前知识库项目中有据可查的范围。</span></div>
-        </section>
-
-        <footer class="footer"><span>知库助手 · FDE Discovery Lab</span><span>静态交互演示 · 未连接真实数据库或模型服务</span></footer>
+    <section id="ch2">
+      <div class="sec-head"><span class="no">02</span><h2>系统架构：把模型调用放进可替换的 Harness</h2><span class="en">APPLICATION FLOW</span></div>
+      <p class="body">API 层负责身份与业务接口；权限层建立可信的租户上下文；Harness 编排检索、模型调用、输出检查和审计；模型服务只作为可替换的推理后端。</p>
+      <div class="graph" aria-label="请求链路示意"><div class="node">用户请求<br><span class="small">登录身份 · 租户</span></div><span class="arrow">→</span><div class="node">FastAPI<br><span class="small">鉴权 · 业务 API</span></div><span class="arrow">→</span><div class="node main">AI Harness<br><span class="small">策略 · 检索 · 校验 · 审计</span></div></div>
+      <div class="graph"><div class="node">PostgreSQL<br><span class="small">用户、租户、文档元数据</span></div><span class="arrow">↔</span><div class="node">RAG 检索<br><span class="small">只搜允许访问的知识片段</span></div><span class="arrow">↔</span><div class="node">Ollama<br><span class="small">聊天模型与 Embedding</span></div></div>
+      <div class="formula">输入 → 身份校验 → 租户与组织范围 → 检索 → 生成 → 引用核对 → 审计记录<br><small>Harness 统一封装上下文和处理步骤，避免每个 API 各自拼一套提示词、检索逻辑和日志。</small></div>
+      <div class="grid3">
+        <article class="card"><span class="tag">数据面</span><h3>PostgreSQL</h3><p class="small">保存租户、组织树、文档元数据、分块、权限配置和审核状态。</p></article>
+        <article class="card"><span class="tag">编排面</span><h3>AI Harness</h3><p class="small">接收可信权限上下文，统一执行检索、模型调用、引用与质量检查。</p></article>
+        <article class="card"><span class="tag">推理面</span><h3>Ollama</h3><p class="small">承担本地聊天与向量模型；部署拓扑变化时可替换模型端点。</p></article>
       </div>
-    </main>
-  </div>
+      <div class="callout amber"><b>设计边界</b>部署到云端的 API 不能把 Ollama 配置成 localhost 或仅容器内部的服务名。托管服务必须能安全访问模型端点，或通过同一私有网络部署。</div>
+    </section>
+
+    <section id="ch3">
+      <div class="sec-head"><span class="no">03</span><h2>多租户权限：先限定数据，再判断角色</h2><span class="en">TENANT ISOLATION</span></div>
+      <p class="body">租户隔离不是界面筛选条件，而是所有数据库查询和业务 API 的强制约束。任何请求都应从已验证身份推导租户范围，不信任客户端传来的 tenant_id。</p>
+      <div class="tblwrap"><table><thead><tr><th>角色</th><th>管理范围</th><th>默认知识读取范围</th><th>典型操作</th></tr></thead><tbody>
+        <tr><td><b>平台管理员</b></td><td>平台级租户</td><td>默认不读取租户文档正文</td><td>创建租户、首位租户管理员</td></tr>
+        <tr><td><b>租户管理员</b></td><td>单一租户</td><td>本租户授权知识库</td><td>管理成员、组织树、知识库</td></tr>
+        <tr><td><b>组织单元管理员</b></td><td>自身组织单元及后代</td><td>本范围内获授权知识库</td><td>管理范围内成员与资料</td></tr>
+        <tr><td><b>普通成员</b></td><td>个人操作</td><td>租户共享或所属单元明确授权的资料</td><td>提问、阅读已发布 Wiki</td></tr>
+      </tbody></table></div>
+      <div class="grid2">
+        <div class="card"><h3>查询前检查</h3><ol><li>验证登录态并解析用户 ID</li><li>从服务端载入成员所属租户与组织单元</li><li>先加 tenant_id 条件，再加资源授权条件</li><li>检查目标知识库范围和操作角色</li><li>记录允许或拒绝的审计事件</li></ol></div>
+        <div class="card"><h3>必须覆盖的拒绝用例</h3><ul><li>用户修改请求参数读取其他租户文档</li><li>单元管理员访问兄弟单元资料</li><li>平台管理员尝试默认读取租户正文</li><li>成员调用文档导入或 Wiki 发布接口</li><li>已撤销权限的旧会话继续访问私有资料</li></ul></div>
+      </div>
+      <div class="calc">
+        <div class="calc-title">权限口径速查</div><div class="calc-desc">选一个角色，查看演示规则。它用于讲解设计，不连接真实账号或仓库 API。</div>
+        <div class="fields"><div class="field"><label for="role-pick">当前演示角色</label><select id="role-pick"><option value="member">普通成员</option><option value="unit">组织单元管理员</option><option value="tenant">租户管理员</option><option value="platform">平台管理员</option></select></div></div>
+        <div class="verdict" id="role-result" aria-live="polite">可提问并查看已发布 Wiki；只能检索租户共享或所属单元已授权的知识库。</div>
+      </div>
+      <div class="callout red"><b>安全不变量</b>所有资源 API 默认拒绝；权限检查必须在服务端完成。平台级角色不自动获得租户知识读取权。</div>
+    </section>
+
+    <section id="ch4">
+      <div class="sec-head"><span class="no">04</span><h2>RAG 成本：把每次回答拆成可计量的调用</h2><span class="en">RETRIEVAL & TOKENS</span></div>
+      <p class="body">RAG 的月成本不只取决于聊天模型单价。分块与 Embedding 产生索引成本；每次问题可能包含重写、检索、重排、回答或重试，多步调用要乘进预算。</p>
+      <div class="steps"><div class="step"><span class="sn">01 · INGEST</span><p>文本清洗、按规则切块并保留来源元数据。</p></div><div class="step"><span class="sn">02 · EMBED</span><p>为每个片段生成向量，记录模型与版本。</p></div><div class="step"><span class="sn">03 · RETRIEVE</span><p>在权限过滤之后取回相关片段。</p></div><div class="step"><span class="sn">04 · GENERATE</span><p>组织上下文，生成回答并绑定引用。</p></div></div>
+      <div class="formula">月模型费 ≈ 日请求量 × 30 × 每次调用步数 × 重试系数 × 单次 Token 成本<br><small>单次 Token 成本 = (输入 Token × 输入单价 + 输出 Token × 输出单价) ÷ 1,000,000。</small></div>
+      <div class="calc" id="rag-calc">
+        <div class="calc-title">RAG 月模型成本估算</div><div class="calc-desc">下方价格是演示输入，不代表任何厂商当前报价。按合同或控制台价格替换；本页计算不会发送数据。</div>
+        <div class="fields">
+          <div class="field"><label for="rag-req">日均问题数（次）</label><input id="rag-req" type="number" min="0" step="100" value="8000"></div>
+          <div class="field"><label for="rag-in">每次输入 Token</label><input id="rag-in" type="number" min="0" step="100" value="2600"></div>
+          <div class="field"><label for="rag-out">每次输出 Token</label><input id="rag-out" type="number" min="0" step="100" value="500"></div>
+          <div class="field"><label for="rag-steps">每个问题模型调用步数</label><input id="rag-steps" type="number" min="1" step="1" value="2"></div>
+          <div class="field"><label for="rag-retry">平均重试率（%）</label><input id="rag-retry" type="number" min="0" step="1" value="5"></div>
+          <div class="field"><label for="rag-pin">输入单价（元 / 百万 Token）</label><input id="rag-pin" type="number" min="0" step="0.1" value="3"></div>
+          <div class="field"><label for="rag-pout">输出单价（元 / 百万 Token）</label><input id="rag-pout" type="number" min="0" step="0.1" value="12"></div>
+        </div>
+        <div class="results"><div class="result"><div class="rl">单次问题模型费</div><div class="rv" id="rag-once">¥0.00</div><div class="rs">含调用步数和重试</div></div><div class="result"><div class="rl">每月问题量</div><div class="rv" id="rag-volume">0</div><div class="rs">按 30 天估算</div></div><div class="result"><div class="rl">月模型费</div><div class="rv red" id="rag-month">¥0</div><div class="rs">不含数据库和服务器</div></div><div class="result"><div class="rl">年模型费</div><div class="rv" id="rag-year">¥0</div><div class="rs">按当前输入线性外推</div></div></div>
+        <div class="verdict" id="rag-verdict" aria-live="polite"></div>
+      </div>
+      <div class="callout teal"><b>降低成本的顺序</b>先减少无效上下文与重复调用，再调 chunk 大小、缓存和模型分级；每次优化都要检查引用命中率和答案质量，不能只看账单。</div>
+    </section>
+
+    <section id="ch5">
+      <div class="sec-head"><span class="no">05</span><h2>部署容量：把模型、并发和端点一起评估</h2><span class="en">OLLAMA & CAPACITY</span></div>
+      <p class="body">Ollama 负责模型推理，但部署方案还要考虑并发、上下文长度、显存、网络可达性、模型加载时间和运维方式。上线前用目标模型与真实问题做压测。</p>
+      <div class="calc">
+        <div class="calc-title">模型显存粗估</div><div class="calc-desc">这是早期规划的近似公式。权重字节数与 KV Cache 因模型结构和后端实现而异；请用目标模型资料或实测值替换默认假设。</div>
+        <div class="fields">
+          <div class="field"><label for="vr-param">模型参数量（十亿）</label><input id="vr-param" type="number" min="0.1" step="0.1" value="8"></div>
+          <div class="field"><label for="vr-byte">每参数字节数（量化精度）</label><select id="vr-byte"><option value="0.5">约 4 bit · 0.5 B</option><option value="1">约 8 bit · 1 B</option><option value="2" selected>约 16 bit · 2 B</option></select></div>
+          <div class="field"><label for="vr-kv">每路每 1K Token KV（GB）</label><input id="vr-kv" type="number" min="0" step="0.01" value="0.08"></div>
+          <div class="field"><label for="vr-ctx">上下文长度（Token）</label><input id="vr-ctx" type="number" min="1" step="512" value="4096"></div>
+          <div class="field"><label for="vr-conc">目标并发（路）</label><input id="vr-conc" type="number" min="1" step="1" value="4"></div>
+          <div class="field"><label for="vr-reserve">额外预留（%）</label><input id="vr-reserve" type="number" min="0" step="5" value="25"></div>
+        </div>
+        <div class="results"><div class="result"><div class="rl">模型权重</div><div class="rv" id="vr-weight">0 GB</div></div><div class="result"><div class="rl">KV Cache</div><div class="rv" id="vr-cache">0 GB</div></div><div class="result"><div class="rl">规划显存</div><div class="rv red" id="vr-total">0 GB</div></div></div>
+        <div class="verdict" id="vr-verdict" aria-live="polite"></div>
+      </div>
+      <div class="grid2">
+        <article class="card"><span class="tag">本地开发</span><h3>Compose 网络</h3><p class="small">API 容器访问 Ollama 时使用同一 Compose 网络中的服务名。宿主机上的本地运行则配置 localhost 地址。</p></article>
+        <article class="card"><span class="tag red">云端托管</span><h3>端点必须可达</h3><p class="small">托管 API 里的 localhost 指向 API 容器本身。需在托管网络中部署模型，或配置受控、安全且网络可达的推理端点。</p></article>
+      </div>
+      <div class="callout amber"><b>部署检查</b>确认数据库连接、健康检查、JWT 密钥、模型名称、模型端点网络策略、超时和限流；不要把密码、数据库 URL 或令牌提交到公开仓库。</div>
+    </section>
+
+    <section id="ch6">
+      <div class="sec-head"><span class="no">06</span><h2>AI Harness：让每个回答经过同一组检查</h2><span class="en">POLICY & OBSERVABILITY</span></div>
+      <p class="body">Harness 是服务内部的统一编排层，不假定某个特定外部产品。它接收已授权上下文，执行 RAG 流程并产生可追踪的结果。</p>
+      <div class="steps"><div class="step"><span class="sn">1 · CONTEXT</span><p>用户、租户、组织单元、可用知识库 ID。</p></div><div class="step"><span class="sn">2 · RETRIEVE</span><p>先加权限过滤，再召回与问题相关的片段。</p></div><div class="step"><span class="sn">3 · GENERATE</span><p>调用模型，要求答案仅依据给定资料。</p></div><div class="step"><span class="sn">4 · VERIFY</span><p>校验引用、记录耗时、状态和审计事件。</p></div></div>
+      <div class="matrix">
+        <article class="card"><strong>输入约束</strong><p>对用户输入、检索片段和模型输出分别处理，不让资料中的文字改写系统权限规则。</p></article>
+        <article class="card"><strong>引用校验</strong><p>回答中的来源 ID 必须对应本次检索结果；没有足够证据时返回不确定说明。</p></article>
+        <article class="card"><strong>质量信号</strong><p>跟踪召回命中、引用覆盖、拒答、延迟、错误率和人工反馈，为后续调优留下依据。</p></article>
+      </div>
+      <div class="formula">audit_event = { tenant_id, actor_id, action, resource_id, decision, trace_id, created_at }<br><small>日志只记录必要的诊断字段；敏感正文是否留存应由数据保留策略决定。</small></div>
+      <div class="callout red"><b>失败时的行为</b>权限不足就拒绝；检索为空就说明资料不足；模型超时就返回可理解的失败提示。不要用没有来源的“看起来合理”答案掩盖错误。</div>
+    </section>
+
+    <section id="ch7">
+      <div class="sec-head"><span class="no">07</span><h2>LLM Wiki：关系可浏览，来源可回查</h2><span class="en">KNOWLEDGE GRAPH</span></div>
+      <p class="body">图谱的价值来自稳定概念、清晰关系和原始证据，不来自节点数量。先让系统生成待审核草稿，再由知识管理员决定哪些内容进入正式 Wiki。</p>
+      <div class="graph"><div class="node">源文档<br><span class="small">段落 · 文档版本</span></div><span class="arrow">→</span><div class="node main">实体与关系草稿<br><span class="small">置信度 · 证据片段</span></div><span class="arrow">→</span><div class="node">审核与发布<br><span class="small">管理员 · 变更记录</span></div></div>
+      <div class="grid3">
+        <article class="card"><span class="tag">实体</span><h3>统一术语</h3><p class="small">为产品、流程、团队和关键指标建立唯一可识别的条目。</p></article>
+        <article class="card"><span class="tag">关系</span><h3>说明关联</h3><p class="small">用明确的关系表达依赖、归属、由谁负责或由什么流程产生。</p></article>
+        <article class="card"><span class="tag red">证据</span><h3>保留出处</h3><p class="small">记录来源文档、段落位置和版本；审核后也能回到原文。</p></article>
+      </div>
+      <div class="tblwrap"><table><thead><tr><th>状态</th><th>可见范围</th><th>下一步</th></tr></thead><tbody><tr><td>草稿</td><td>有管理权限的编辑者</td><td>检查实体、关系、证据与权限范围</td></tr><tr><td>已发布</td><td>按 Wiki 与知识库授权对用户开放</td><td>保留版本、审核人和发布时间</td></tr><tr><td>已撤回</td><td>停止作为有效知识展示</td><td>记录撤回原因并保留审计链路</td></tr></tbody></table></div>
+      <div class="callout teal"><b>推荐审核清单</b>实体是否存在于原文、关系方向是否正确、证据是否充分、内容是否包含不应外发的信息、发布范围是否匹配原知识库权限。</div>
+    </section>
+
+    <section id="ch8">
+      <div class="sec-head"><span class="no">08</span><h2>ROI 与报价：把收益、运行费和实施范围放在一张账上</h2><span class="en">VALUE & PRICING</span></div>
+      <p class="body">当前没有你的客户人数、节省工时、部署环境或合同价格，所以这里提供可编辑的测算框架。请用客户访谈和真实成本替换示例值，再形成正式报价。</p>
+      <div class="calc">
+        <div class="calc-title">客户 ROI 演示测算</div><div class="calc-desc">按每人每月节省工时估算人工价值，乘以实际兑现比例；扣除年运行费和一次性实施投入。本地计算，不保存输入。</div>
+        <div class="fields">
+          <div class="field"><label for="roi-users">覆盖用户数（人）</label><input id="roi-users" type="number" min="0" step="5" value="40"></div>
+          <div class="field"><label for="roi-hours">每人每月节省工时</label><input id="roi-hours" type="number" min="0" step="1" value="5"></div>
+          <div class="field"><label for="roi-salary">月综合人工成本（元 / 人）</label><input id="roi-salary" type="number" min="0" step="500" value="12000"></div>
+          <div class="field"><label for="roi-realize">收益兑现比例（%）</label><input id="roi-realize" type="number" min="0" max="100" step="5" value="55"></div>
+          <div class="field"><label for="roi-once">一次性实施投入（元）</label><input id="roi-once" type="number" min="0" step="10000" value="180000"></div>
+          <div class="field"><label for="roi-opex">年运行成本（元）</label><input id="roi-opex" type="number" min="0" step="5000" value="60000"></div>
+        </div>
+        <div class="results"><div class="result"><div class="rl">预计年化效率价值</div><div class="rv" id="roi-gain">¥0</div></div><div class="result"><div class="rl">扣运行费后年净收益</div><div class="rv" id="roi-net">¥0</div></div><div class="result"><div class="rl">简单回本期</div><div class="rv red" id="roi-payback">—</div></div><div class="result"><div class="rl">第一年净收益率</div><div class="rv" id="roi-rate">—</div></div></div>
+        <div class="verdict" id="roi-verdict" aria-live="polite"></div>
+      </div>
+      <div class="calc">
+        <div class="calc-title">实施报价底稿</div><div class="calc-desc">按角色人天、基础设施与风险预留测算一个讨论起点。正式报价还需要明确交付边界、验收、税费、运维 SLA 与变更机制。</div>
+        <div class="fields">
+          <div class="field"><label for="q-dev-days">应用开发人天</label><input id="q-dev-days" type="number" min="0" step="1" value="45"></div>
+          <div class="field"><label for="q-dev-rate">开发人天单价（元）</label><input id="q-dev-rate" type="number" min="0" step="100" value="2500"></div>
+          <div class="field"><label for="q-ai-days">AI / 检索人天</label><input id="q-ai-days" type="number" min="0" step="1" value="18"></div>
+          <div class="field"><label for="q-ai-rate">AI 人天单价（元）</label><input id="q-ai-rate" type="number" min="0" step="100" value="2800"></div>
+          <div class="field"><label for="q-pm-days">产品 / 交付人天</label><input id="q-pm-days" type="number" min="0" step="1" value="12"></div>
+          <div class="field"><label for="q-pm-rate">交付人天单价（元）</label><input id="q-pm-rate" type="number" min="0" step="100" value="2200"></div>
+          <div class="field"><label for="q-infra">首年基础设施估算（元）</label><input id="q-infra" type="number" min="0" step="1000" value="36000"></div>
+          <div class="field"><label for="q-risk">风险预留（%）</label><input id="q-risk" type="number" min="0" step="1" value="15"></div>
+          <div class="field"><label for="q-margin">成本加成（%）</label><input id="q-margin" type="number" min="0" step="1" value="25"></div>
+        </div>
+        <div class="results"><div class="result"><div class="rl">人力成本</div><div class="rv" id="q-labor">¥0</div></div><div class="result"><div class="rl">基础成本</div><div class="rv" id="q-base">¥0</div></div><div class="result"><div class="rl">带风险与加成的讨论价</div><div class="rv red" id="q-price">¥0</div></div><div class="result"><div class="rl">角色总人天</div><div class="rv" id="q-days">0</div></div></div>
+        <div class="verdict warn" id="q-verdict" aria-live="polite"></div>
+      </div>
+      <div class="dl"><button class="button ghost" data-csv="roi">下载当前 ROI 测算 CSV</button><button class="button ghost" data-csv="quote">下载当前报价底稿 CSV</button></div>
+      <div class="callout amber"><b>课程测算不是商业报价</b>示例输入仅用于展示公式。未提供的客户数据、模型费率与部署价格都必须向客户或供应商核实，不要直接把演示结果作为承诺。</div>
+    </section>
+
+    <section id="ch9">
+      <div class="sec-head"><span class="no">09</span><h2>上线验收：逐项验证权限、引用与运维</h2><span class="en">ACCEPTANCE CHECKLIST</span></div>
+      <p class="body">把演示效果变成可上线系统，需要明确每个验收项的证据和负责人。勾选状态只保存在当前页面内存中，刷新后会重置。</p>
+      <div class="grid2">
+        <article class="card"><h3>产品与权限</h3><ul class="checklist" id="acceptance">
+          <li><input type="checkbox" id="ac1"><label for="ac1">平台管理员创建租户；不会自动读取该租户文档正文。</label></li>
+          <li><input type="checkbox" id="ac2"><label for="ac2">成员无法跨租户检索或读取文档。</label></li>
+          <li><input type="checkbox" id="ac3"><label for="ac3">组织单元管理员访问范围仅覆盖本单元及后代。</label></li>
+          <li><input type="checkbox" id="ac4"><label for="ac4">回答引用可回到本次检索得到的授权文档片段。</label></li>
+          <li><input type="checkbox" id="ac5"><label for="ac5">Wiki 草稿经管理员审核后才进入已发布状态。</label></li>
+        </ul></article>
+        <article class="card"><h3>运行与数据</h3><ul class="checklist">
+          <li><input type="checkbox" id="ac6"><label for="ac6">数据库连接、迁移、备份和恢复流程有记录。</label></li>
+          <li><input type="checkbox" id="ac7"><label for="ac7">托管 API 能访问模型端点，密钥存于托管环境。</label></li>
+          <li><input type="checkbox" id="ac8"><label for="ac8">错误率、延迟、引用覆盖和审计事件可查询。</label></li>
+          <li><input type="checkbox" id="ac9"><label for="ac9">并发、上下文长度和模型加载时间已用目标环境验证。</label></li>
+          <li><input type="checkbox" id="ac10"><label for="ac10">项目一页纸、MVP 边界、验收数据与责任人已补齐。</label></li>
+        </ul></article>
+      </div>
+      <div class="check-progress" id="check-progress" aria-live="polite">已完成 0 / 10 项</div>
+      <div class="dl"><button class="button ghost" data-csv="acceptance">下载上线验收清单 CSV</button><button class="button ghost" data-csv="roles">下载角色权限矩阵 CSV</button></div>
+      <div class="callout teal"><b>下一步需要项目方补充</b>目标客户和行业、活跃用户数、日均问题数、资料规模、部署方式、模型端点预算、上线时间和验收指标。补齐后就能把教学参数替换成项目测算。</div>
+    </section>
+
+    <footer class="foot"><span>FDE Discovery Lab · 多租户知识库 SaaS 项目实战课件</span><span>静态交互演示 · 未连接真实 API、数据库或 Ollama</span><span><a href="https://github.com/yonghuming-jsy/fde-discovery-lab">公开 GitHub 仓库</a></span></footer>
+  </main>
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
   <script>
-    const pageTitles = {overview:"项目概览",library:"知识库",ask:"智能问答",wiki:"Wiki 图谱",roles:"分层权限",brief:"项目一页纸"};
-    const navButtons = [...document.querySelectorAll(".nav button")];
-    function showPage(name) {
-      document.querySelectorAll(".page").forEach(page => page.classList.toggle("active", page.id === `page-${name}`));
-      navButtons.forEach(button => button.classList.toggle("active", button.dataset.page === name));
-      document.getElementById("crumb").textContent = pageTitles[name] || pageTitles.overview;
-      window.scrollTo({top:0, behavior:"smooth"});
+    const $ = id => document.getElementById(id);
+    const num = id => { const value = parseFloat($(id).value); return Number.isFinite(value) ? value : 0; };
+    const money = value => '¥' + Math.round(value).toLocaleString('zh-CN');
+    const decimalMoney = value => '¥' + value.toFixed(2);
+    const bind = (ids, fn) => ids.forEach(id => { $(id).addEventListener('input', fn); $(id).addEventListener('change', fn); });
+    function showToast(message){const toast=$('toast');toast.textContent=message;toast.classList.add('show');clearTimeout(showToast.timer);showToast.timer=setTimeout(()=>toast.classList.remove('show'),2400);}
+
+    function calcRag(){
+      const requests=num('rag-req'), input=num('rag-in'), output=num('rag-out'), steps=Math.max(1,num('rag-steps')), retry=num('rag-retry')/100;
+      const once=((input*num('rag-pin')+output*num('rag-pout'))/1000000)*steps*(1+retry);
+      const month=once*requests*30;
+      $('rag-once').textContent=decimalMoney(once);$('rag-volume').textContent=Math.round(requests*30).toLocaleString('zh-CN');$('rag-month').textContent=money(month);$('rag-year').textContent=money(month*12);
+      $('rag-verdict').textContent=month===0?'填写模型单价后即可估算；Embedding、数据库、服务器与人工运营成本需另计。':(month<3000?'当前模型费占比可能较低，优先确认检索质量、人工维护和部署成本。':'模型费开始成为重要运营项，可评估缓存、模型分级和上下文压缩，并复核答案质量。');
     }
-    navButtons.forEach(button => button.addEventListener("click", () => showPage(button.dataset.page)));
-    document.querySelectorAll("[data-go]").forEach(button => button.addEventListener("click", () => showPage(button.dataset.go)));
-    const toast = document.getElementById("toast");
-    let toastTimer;
-    function showToast(message) { toast.textContent = message; toast.classList.add("show"); clearTimeout(toastTimer); toastTimer = setTimeout(() => toast.classList.remove("show"), 2500); }
-    const answers = [
-      {match:/普通用户|成员|访问.*知识/, text:"普通用户可以读取租户共享的知识库，以及分配给其组织单元的知识库；可以进行问答并查看已发布 Wiki。普通用户不能创建知识库、导入资料或发布 Wiki。", source:"项目技术方案 · 用户与权限模型"},
-      {match:/wiki|发布|审核/, text:"Wiki 更新由知识库管理员触发。Harness 从授权资料生成带来源的实体、关系和摘要；生成结果应先作为草稿，经管理员审核后再发布。", source:"项目技术方案 · 核心流程"},
-      {match:/文件|格式|导入/, text:"当前 MVP 方案支持 UTF-8 文本和 Markdown 导入。PDF 和 Office 文件解析未包含在一期范围。", source:"README · 当前 MVP 限制"},
-      {match:/租户|隔离|平台管理员/, text:"所有租户资源查询都必须在服务端先限定租户并检查成员、角色和组织单元范围。平台管理员不会自动获得租户文档正文访问权；跨租户访问默认拒绝。", source:"项目技术方案 · 层级与隔离规则"}
-    ];
-    function askDemo() {
-      const q = document.getElementById("question").value.trim();
-      if (!q) { showToast("先输入一个问题，或选用下方示例"); return; }
-      const hit = answers.find(item => item.match.test(q));
-      const answer = document.getElementById("answer");
-      const citations = document.getElementById("citations");
-      if (hit) {
-        answer.classList.remove("empty");
-        answer.textContent = hit.text;
-        citations.innerHTML = `<div class="citation"><span class="citation-mark">↗</span><span>${hit.source} <strong>· 演示引用</strong></span></div>`;
-      } else {
-        answer.classList.add("empty");
-        answer.textContent = "这条演示问题没有匹配到本页的示例回答。真实部署后，问答会在用户有权限的知识库范围内检索；若资料不足，应明确说明而不是编造。";
-        citations.innerHTML = "";
-      }
-      showToast("已生成本地演示回答；未调用模型服务");
+    bind(['rag-req','rag-in','rag-out','rag-steps','rag-retry','rag-pin','rag-pout'],calcRag);calcRag();
+
+    function calcVram(){
+      const weight=num('vr-param')*num('vr-byte'), cache=num('vr-kv')*num('vr-ctx')/1000*num('vr-conc'), total=(weight+cache)*(1+num('vr-reserve')/100);
+      $('vr-weight').textContent=weight.toFixed(1)+' GB';$('vr-cache').textContent=cache.toFixed(1)+' GB';$('vr-total').textContent=total.toFixed(1)+' GB';
+      $('vr-verdict').textContent='规划需求约 '+total.toFixed(1)+' GB。还需考虑运行时开销、驱动和模型加载方式；请以目标模型文档和压测结果为准。';
     }
-    document.getElementById("ask-button").addEventListener("click", askDemo);
-    document.getElementById("question").addEventListener("keydown", event => { if ((event.metaKey || event.ctrlKey) && event.key === "Enter") askDemo(); });
-    document.querySelectorAll("[data-question]").forEach(button => button.addEventListener("click", () => { document.getElementById("question").value = button.dataset.question; askDemo(); }));
-    const nodeNotes = {
-      "知识空间":"所有检索、问答与 Wiki 操作都从当前用户可访问的知识范围开始。",
-      "租户隔离":"业务记录按 tenant_id 隔离；服务端默认拒绝跨租户读取。",
-      "RAG 检索":"在授权知识库中检索文本片段，再交给本地 Ollama 生成有依据的回答。",
-      "组织权限":"租户管理员管理本租户；组织单元管理员限于自身及后代单元。",
-      "来源引用":"回答和 Wiki 草稿保留对应文档来源；不足以回答时应明确说明。"
+    bind(['vr-param','vr-byte','vr-kv','vr-ctx','vr-conc','vr-reserve'],calcVram);calcVram();
+
+    const roleCopy={
+      member:'可提问并查看已发布 Wiki；只能检索租户共享或所属单元已授权的知识库。',
+      unit:'可管理自身组织单元及后代范围内的成员和资料；不能越权到兄弟单元或租户级资源。',
+      tenant:'可管理本租户成员、组织树和知识库；仍不能访问其他租户的数据。',
+      platform:'可创建租户和首位租户管理员；平台身份本身不授予读取租户文档正文的权限。'
     };
-    document.querySelectorAll("[data-node]").forEach(button => button.addEventListener("click", () => {
-      document.getElementById("node-note").innerHTML = `<span class="notice-symbol">i</span><span><strong>${button.dataset.node}：</strong>${nodeNotes[button.dataset.node]}</span>`;
-    }));
+    $('role-pick').addEventListener('change',()=>{$('role-result').textContent=roleCopy[$('role-pick').value];});
+
+    function calcRoi(){
+      const people=num('roi-users'),hours=num('roi-hours'),salary=num('roi-salary'),realize=num('roi-realize')/100,once=num('roi-once'),opex=num('roi-opex');
+      const gain=people*hours*12*(salary/174)*realize,net=gain-opex,monthly=net/12,payback=monthly>0?once/monthly:Infinity,firstYear=net-once,rate=once>0?firstYear/once*100:0;
+      $('roi-gain').textContent=money(gain);$('roi-net').textContent=money(net);$('roi-payback').textContent=Number.isFinite(payback)?payback.toFixed(1)+' 个月':'暂不回本';$('roi-rate').textContent=once>0?rate.toFixed(0)+'%':'—';
+      $('roi-verdict').textContent=net<=0?'当前输入下，预计年化效率价值未覆盖年运行成本；应重新核实可节省工时、实际采用率或运行成本。':'当前仅是基于假设的简单回收期估算；还需验证节省工时是否能转化为实际业务收益。';
+      $('roi-verdict').className='verdict'+(net<=0?' warn':'');
+    }
+    bind(['roi-users','roi-hours','roi-salary','roi-realize','roi-once','roi-opex'],calcRoi);calcRoi();
+
+    function calcQuote(){
+      const dev=num('q-dev-days')*num('q-dev-rate'),ai=num('q-ai-days')*num('q-ai-rate'),pm=num('q-pm-days')*num('q-pm-rate'),labor=dev+ai+pm,base=labor+num('q-infra'),price=base*(1+num('q-risk')/100)*(1+num('q-margin')/100),days=num('q-dev-days')+num('q-ai-days')+num('q-pm-days');
+      $('q-labor').textContent=money(labor);$('q-base').textContent=money(base);$('q-price').textContent=money(price);$('q-days').textContent=days.toLocaleString('zh-CN');
+      $('q-verdict').textContent='讨论价仅由当前人天、预留和成本加成推导。正式报价前需拆清需求变更、验收、税费、模型用量、运维 SLA 和客户采购流程。';
+    }
+    bind(['q-dev-days','q-dev-rate','q-ai-days','q-ai-rate','q-pm-days','q-pm-rate','q-infra','q-risk','q-margin'],calcQuote);calcQuote();
+
+    const csvRows={
+      brief:[['字段','当前整理','状态'],['项目名称','FDE Discovery Lab · 多租户知识库 Wiki SaaS','已整理'],['技术方向','FastAPI / PostgreSQL / Ollama / RAG / LLM Wiki','已整理'],['客户与行业','','待补充'],['用户规模与问答量','','待补充'],['部署方式','','待确认']],
+      scope:[['模块','MVP 目标','边界'],['租户与组织','平台、租户、组织单元、成员和角色','服务端隔离'],['资料导入','Markdown / UTF-8 文本','不含 PDF / Office 解析'],['RAG','权限过滤、片段检索、引用回答','先验证引用质量'],['Wiki','来源关联、草稿审核、发布状态','管理员审核后发布'],['模型','Ollama 聊天与向量化','托管端点需网络可达']],
+      roles:[['角色','范围','可操作内容'],['平台管理员','平台','创建租户和首位租户管理员'],['租户管理员','单一租户','管理本租户成员、组织树、知识库'],['组织单元管理员','自身单元及后代','管理授权范围内成员和资料'],['普通成员','个人授权范围','提问、阅读已发布 Wiki']],
+      acceptance:[['验收项','状态'],['跨租户读取默认拒绝','待验收'],['组织单元仅允许本单元及后代','待验收'],['RAG 回答引用可回到授权片段','待验收'],['Wiki 草稿审核后方可发布','待验收'],['数据库备份与恢复流程','待验收'],['托管 API 可访问模型端点','待验收'],['日志、延迟和错误率可观察','待验收']],
+      roi:[['指标','当前输入'],['覆盖用户数',num('roi-users')],['每人每月节省工时',num('roi-hours')],['月综合人工成本（元）',num('roi-salary')],['收益兑现比例（%）',num('roi-realize')],['一次性实施投入（元）',num('roi-once')],['年运行成本（元）',num('roi-opex')],['预计年化效率价值（元）',$('roi-gain').textContent],['扣运行费后年净收益（元）',$('roi-net').textContent],['简单回本期',$('roi-payback').textContent]],
+      quote:[['指标','当前输入或结果'],['开发人天',num('q-dev-days')],['AI / 检索人天',num('q-ai-days')],['产品 / 交付人天',num('q-pm-days')],['开发人天单价',num('q-dev-rate')],['AI 人天单价',num('q-ai-rate')],['交付人天单价',num('q-pm-rate')],['首年基础设施估算',num('q-infra')],['人力成本',$('q-labor').textContent],['基础成本',$('q-base').textContent],['带风险与加成的讨论价',$('q-price').textContent]]
+    };
+    function csvEscape(value){const text=String(value??'');return '"'+text.replaceAll('"','""')+'"';}
+    function downloadCsv(key){const rows=csvRows[key];if(!rows)return;const csv='\ufeff'+rows.map(row=>row.map(csvEscape).join(',')).join('\r\n');const blob=new Blob([csv],{type:'text/csv;charset=utf-8'});const url=URL.createObjectURL(blob);const link=document.createElement('a');link.href=url;link.download='fde-knowledge-'+key+'.csv';document.body.appendChild(link);link.click();link.remove();URL.revokeObjectURL(url);showToast('已在浏览器生成 CSV');}
+    document.querySelectorAll('[data-csv]').forEach(button=>button.addEventListener('click',()=>downloadCsv(button.dataset.csv)));
+
+    function updateChecks(){const boxes=[...document.querySelectorAll('#acceptance input[type=checkbox]')];const done=boxes.filter(box=>box.checked).length;$('check-progress').textContent='已完成 '+done+' / '+boxes.length+' 项';}
+    document.querySelectorAll('#acceptance input[type=checkbox]').forEach(box=>box.addEventListener('change',updateChecks));updateChecks();
+
+    const chapterLinks=[...document.querySelectorAll('.chapters a')];const observed=[...document.querySelectorAll('main section[id]')];
+    if('IntersectionObserver' in window){const observer=new IntersectionObserver(entries=>{entries.forEach(entry=>{if(entry.isIntersecting){chapterLinks.forEach(link=>link.classList.toggle('active',link.hash==='#'+entry.target.id));}});},{rootMargin:'-18% 0px -70% 0px'});observed.forEach(section=>observer.observe(section));}
   </script>
 </body>
 </html>
