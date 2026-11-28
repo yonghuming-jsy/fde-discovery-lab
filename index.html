@@ -193,10 +193,12 @@
     @media (prefers-reduced-motion: reduce) { *, *:before, *:after { scroll-behavior: auto !important; transition: none !important; } }
     /* Restrained enterprise workspace styling */
     :root {
+      --accent: #315a84; --accent-hover: #284d73; --accent-soft: #eef2f6;
       --ink: #283444; --muted: #5f6d7d; --muted-2: #778394; --line: #dfe4ea;
-      --paper: #f6f7f9; --surface: #fff; --navy: #263547; --navy-2: #fff;
-      --cyan: #37628f; --cyan-dark: #315a84; --orange: #667b94; --orange-dark: #53677e;
-      --green: #426a56; --shadow: none;
+      --paper: #f6f7f9; --surface: #fff; --surface-subtle: #f3f5f7;
+      --navy: var(--ink); --navy-2: var(--surface);
+      --cyan: var(--accent); --cyan-dark: var(--accent); --orange: var(--accent); --orange-dark: var(--accent);
+      --green: var(--accent); --shadow: none;
     }
     body { background: var(--paper); color: var(--ink); }
     .topbar { height: 62px; background: #fff; color: var(--ink); border-bottom: 1px solid var(--line); }
@@ -205,33 +207,31 @@
     .brand-caption { display: none; }
     .brand-name { font-size: .93rem; font-weight: 700; }
     .topbar-right { color: var(--muted); }
-    .live-badge { border: 0; border-radius: 0; padding: 0; color: var(--muted); font-size: .78rem; }
-    .user-dot { width: 28px; height: 28px; border: 1px solid var(--line); border-radius: 4px; background: #f5f6f8; color: var(--muted); font-size: .75rem; }
+    .live-badge { border: 1px solid var(--line); border-radius: 4px; padding: 4px 8px; color: var(--muted); background: var(--surface-subtle); font-size: .75rem; letter-spacing: 0; }
     .page { max-width: 1320px; padding-top: 28px; }
-    .intro { margin-bottom: 20px; }
+    .intro { margin-bottom: 20px; align-items: center; }
     .eyebrow { color: var(--muted); font-size: .79rem; font-weight: 700; letter-spacing: .02em; text-transform: none; }
-    h1 { max-width: 780px; margin: 6px 0 8px; font-size: clamp(1.75rem, 2.8vw, 2.2rem); line-height: 1.25; letter-spacing: -.02em; font-weight: 700; }
-    .intro p { font-size: .94rem; }
+    h1 { max-width: 780px; margin: 0; font-size: clamp(1.6rem, 2.5vw, 2rem); line-height: 1.25; letter-spacing: -.02em; font-weight: 700; }
     .btn { border-radius: 5px; font-weight: 650; transition: none; }
-    .btn:hover { border-color: #b8c2cd; transform: none; }
-    .btn.primary { background: #315a84; border-color: #315a84; }
-    .btn.primary:hover { background: #284d73; }
-    .btn.accent { background: #edf2f7; border-color: #cbd6e2; color: #315a84; }
-    .case-strip { background: #fff; color: var(--ink); border: 1px solid var(--line); border-radius: 6px; box-shadow: none; }
+    .btn:hover { border-color: var(--line); transform: none; }
+    .btn.primary { background: var(--accent); border-color: var(--accent); }
+    .btn.primary:hover { background: var(--accent-hover); }
+    .btn.accent { background: var(--accent-soft); border-color: var(--line); color: var(--accent); }
+    .case-strip { grid-template-columns: 1.1fr 1fr 1fr; background: #fff; color: var(--ink); border: 1px solid var(--line); border-radius: 6px; box-shadow: none; }
     .case-cell { min-height: 76px; padding: 12px 16px; border-color: var(--line); }
     .case-label { color: var(--muted-2); letter-spacing: .01em; text-transform: none; font-size: .75rem; font-weight: 700; }
     .case-value { font-size: .93rem; font-weight: 700; }
     .case-value.case-name { font-size: 1.05rem; }
     .case-sub { color: var(--muted); font-size: .76rem; }
-    .progress-track { height: 4px; background: #e8ebef; border-radius: 0; }
-    .progress-fill { background: #426b98; border-radius: 0; }
+    .progress-track { height: 4px; background: var(--surface-subtle); border-radius: 0; }
+    .progress-fill { background: var(--accent); border-radius: 0; }
     .progress-text { color: var(--muted); }
     .stage-tabs { display: flex; gap: 0; overflow-x: auto; border-bottom: 1px solid var(--line); margin-bottom: 15px; }
     .stage-tab { flex: 1 0 145px; min-height: 54px; padding: 9px 12px; gap: 9px; border: 0; border-bottom: 2px solid transparent; border-radius: 0; background: transparent; }
-    .stage-tab:hover { border-color: transparent; background: #f0f2f5; box-shadow: none; }
-    .stage-tab.active { border-color: transparent; border-bottom-color: #315a84; box-shadow: none; }
-    .stage-number { width: 25px; height: 25px; border-radius: 4px; background: #edf0f3; color: var(--muted); font-size: .7rem; }
-    .stage-tab.done .stage-number { background: #edf3ef; color: var(--green); }
+    .stage-tab:hover { border-color: transparent; background: var(--surface-subtle); box-shadow: none; }
+    .stage-tab.active { border-color: transparent; border-bottom-color: var(--accent); box-shadow: none; }
+    .stage-number { width: 25px; height: 25px; border-radius: 4px; background: var(--surface-subtle); color: var(--muted); font-size: .7rem; }
+    .stage-tab.done .stage-number { background: var(--accent-soft); color: var(--accent); }
     .stage-name { font-size: .83rem; font-weight: 700; }
     .stage-en { display: none; }
     .workspace { grid-template-columns: minmax(0, 1fr) 276px; gap: 14px; }
@@ -240,53 +240,50 @@
     .panel-heading { padding-bottom: 14px; margin-bottom: 15px; }
     .panel-stage { color: var(--muted); font-size: .75rem; letter-spacing: .02em; text-transform: none; }
     h2 { font-size: 1.35rem; line-height: 1.3; letter-spacing: -.02em; font-weight: 700; }
-    .panel-heading p { font-size: .88rem; }
-    .stage-chip { padding: 5px 8px; border-radius: 4px; background: #f1f3f6; color: var(--muted); font-weight: 650; }
-    .objective { border-left-color: #577ba3; border-radius: 0; background: #f3f5f8; color: var(--ink); font-size: .85rem; }
+    .objective { border-left-color: var(--accent); border-radius: 0; background: var(--surface-subtle); color: var(--ink); font-size: .85rem; }
     .objective strong { color: var(--ink); }
     .section-label { margin: 18px 0 9px; }
     .section-label h3 { font-size: .9rem; font-weight: 700; }
-    .section-label span { font-size: .76rem; }
+    .section-label > span { display: none; }
     .field-grid { gap: 10px; }
     .field-card { border-radius: 5px; padding: 12px; }
     .field-card label { font-size: .82rem; font-weight: 700; }
-    .field-card .hint { min-height: 31px; font-size: .79rem; }
-    .field-card textarea, .field-card input, .field-card select { border-radius: 4px; background: #fff; font-size: .85rem; }
-    .field-card textarea:focus, .field-card input:focus, .field-card select:focus { border-color: #557aa2; box-shadow: 0 0 0 2px rgba(49,90,132,.12); }
+    .field-card textarea, .field-card input, .field-card select { border-color: var(--line); border-radius: 4px; background: #fff; font-size: .85rem; }
+    .field-card textarea:focus, .field-card input:focus, .field-card select:focus { border-color: var(--accent); box-shadow: 0 0 0 2px rgba(49,90,132,.12); }
     .field-status-row { font-size: .73rem; }
     .field-status-row select { border-radius: 4px; font-size: .73rem; }
     .prompt-row { gap: 8px; }
-    .prompt-card { min-height: 0; border-radius: 4px; padding: 10px; background: #fafbfc; font-size: .8rem; }
+    .prompt-card { min-height: 0; border-radius: 4px; padding: 10px; background: var(--surface-subtle); font-size: .8rem; }
     .prompt-card b { font-size: .78rem; font-weight: 700; }
-    .metric, .metric:nth-child(2), .metric:nth-child(3) { border-radius: 4px; background: #f3f5f7; }
+    .metric, .metric:nth-child(2), .metric:nth-child(3) { border-radius: 4px; background: var(--surface-subtle); }
     .metric-value { font-size: 1.08rem; font-weight: 700; }
-    .action-row { margin-top: 18px; padding-top: 14px; }
+    .action-row { margin-top: 18px; padding-top: 14px; justify-content: flex-end; }
     .side-panel { padding: 16px; }
     .side-icon { display: none; }
     .side-title h3 { font-size: .9rem; font-weight: 700; }
-    .coach-copy { font-size: .82rem; }
+    .coach-copy { display: none; }
     .coach-list li { font-size: .79rem; }
     .evidence-box { border: 1px solid var(--line); border-radius: 5px; background: #fff; color: var(--ink); }
     .evidence-top { font-size: .78rem; }
-    .evidence-score { color: #315a84; }
+    .evidence-score { color: var(--accent); }
     .evidence-box p { color: var(--muted); font-size: .75rem; }
-    .mini-track { background: #e8ebef; border-radius: 0; }
-    .mini-track span { background: #426b98; }
+    .mini-track { background: var(--surface-subtle); border-radius: 0; }
+    .mini-track span { background: var(--accent); }
     .evidence-count { color: var(--muted); font-size: .73rem; }
     .local-note { border: 1px solid var(--line); border-radius: 4px; background: #fafbfc; font-size: .75rem; }
-    .practice-box { border-color: var(--line); border-radius: 5px; background: #fbfcfd; }
+    .practice-box { border-color: var(--line); border-radius: 5px; background: #fff; }
     .practice-box label { font-size: .82rem; font-weight: 700; }
-    .practice-box textarea { border-radius: 4px; border-color: #d9dfe6; font-size: .85rem; }
+    .practice-box textarea { border-radius: 4px; border-color: var(--line); font-size: .85rem; }
     .practice-hint { font-size: .73rem; }
     .practice-feedback { border-radius: 4px; }
     .feedback-head { font-size: .82rem; font-weight: 750; }
     .feedback-score { color: var(--muted); }
-    .feedback-item { border: 1px solid #e5e8ec; border-radius: 4px; background: #fff; font-size: .76rem; }
+    .feedback-item { border: 1px solid var(--line); border-radius: 4px; background: #fff; font-size: .76rem; }
     .feedback-item b { font-size: .76rem; font-weight: 700; }
     .feedback-next { font-size: .78rem; }
-    .scenario-box { border-radius: 5px; background: #fbfcfd; }
-    .scenario-card, .scenario-card.base { border-radius: 4px; background: #f1f3f6; }
-    .scenario-card.base { border-left: 2px solid #426b98; }
+    .scenario-box { border-radius: 5px; background: #fff; }
+    .scenario-card, .scenario-card.base { border-radius: 4px; background: var(--surface-subtle); }
+    .scenario-card.base { border-left: 2px solid var(--accent); }
     .scenario-card span { font-size: .73rem; }
     .scenario-card strong { font-size: .87rem; font-weight: 700; }
     .scenario-note { font-size: .72rem; }
@@ -299,6 +296,7 @@
       .stage-tab { flex: 0 0 145px; min-height: 50px; }
       .case-cell:nth-child(-n+2) { border-bottom-color: var(--line); }
       .main-panel { padding: 16px 13px; }
+      .action-buttons { margin-top: 0; }
     }
   </style>
 </head>
@@ -310,18 +308,14 @@
       <div><div class="brand-name">FDE Discovery Lab</div><div class="brand-caption">客户发现与方案评估</div></div>
     </div>
     <div class="topbar-right">
-      <span>案例工作区</span>
       <span class="live-badge">练习版</span>
-      <span class="user-dot" aria-label="访客">F</span>
     </div>
   </header>
 
   <main class="page">
     <section class="intro">
       <div>
-        <div class="eyebrow">客户发现与项目评估</div>
-        <h1>把客户问题整理成可推进的项目方案</h1>
-        <p>按阶段记录问题、现状、价值、方案和交付安排；区分已确认事实与待验证假设。</p>
+        <h1>客户发现工作区</h1>
       </div>
       <div class="intro-actions">
         <button class="btn" id="exportBtn" type="button">导出本轮记录</button>
@@ -333,12 +327,6 @@
       <div class="case-cell">
         <div class="case-label">当前案例</div>
         <div class="case-value case-name" id="caseName">Calder</div>
-        <div class="case-sub">项目发现练习</div>
-      </div>
-      <div class="case-cell">
-        <div class="case-label">当前阶段</div>
-        <div class="case-value" id="currentStageLabel">Opportunity</div>
-        <div class="case-sub" id="currentStageSub">先确认机会是否值得推进</div>
       </div>
       <div class="case-cell">
         <div class="case-label">记录覆盖率</div>
@@ -360,14 +348,11 @@
           <div>
             <div class="panel-stage" id="stageEyebrow"></div>
             <h2 id="stageTitle"></h2>
-            <p id="stageDescription"></p>
           </div>
-          <div class="stage-chip" id="stageChip"></div>
         </div>
         <div class="objective" id="objective"></div>
         <div id="stageContent"></div>
         <div class="action-row">
-          <div class="action-note">记录会保存在当前浏览器；可随时导出为 Markdown。</div>
           <div class="action-buttons">
             <button class="btn small" id="saveBtn" type="button">保存进度</button>
             <button class="btn accent small" id="completeBtn" type="button">完成本阶段</button>
@@ -378,22 +363,15 @@
 
       <aside class="side-panel">
         <div class="side-title"><h3>本阶段检查</h3><div class="side-icon" aria-hidden="true">i</div></div>
-        <p class="coach-copy" id="coachCopy"></p>
         <ul class="coach-list" id="coachList"></ul>
         <div class="evidence-box">
           <div class="evidence-top"><span>本阶段记录覆盖率</span><span class="evidence-score" id="scoreValue">0%</span></div>
-          <p>每条记录可标注为客户已确认、推断或待核实。</p>
           <div class="mini-track"><span id="scoreFill"></span></div>
           <div class="evidence-count" id="scoreCount">0 项已记录</div>
         </div>
-        <div class="local-note"><strong>使用说明</strong><br>当前为案例练习页面，记录保存在本地浏览器中；案例事实以正式教案或客户访谈为准。</div>
       </aside>
     </section>
 
-    <footer class="footer">
-      <span>FDE Discovery Lab · 项目发现练习</span>
-      <span>训练目标：把事实、假设、风险和下一步区分清楚</span>
-    </footer>
   </main>
 </div>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
@@ -558,7 +536,7 @@
     return stage.fields.map(function (item) {
       var id = item[0], label = item[1], hint = item[2], kind = item[3] || "textarea";
       var value = state.values[id] || "";
-      var attrs = ' data-field="' + escapeHtml(id) + '"';
+      var attrs = ' data-field="' + escapeHtml(id) + '" aria-description="' + escapeHtml(hint) + '"';
       var evidence = state.evidence[id] || "unknown";
       var evidenceControl = '<div class="field-status-row"><span>证据标记</span><select aria-label="' + escapeHtml(label) + '的证据标记" data-evidence="' + escapeHtml(id) + '">' +
         '<option value="unknown"' + (evidence === "unknown" ? " selected" : "") + '>待核实</option>' +
@@ -568,10 +546,10 @@
       if (kind === "number") {
         var suffix = id === "automation-rate" ? '<span class="unit">%</span>' : (id.indexOf("cost") > -1 ? '<span class="unit">元</span>' : "");
         input = '<input type="number" min="0" step="any" id="' + escapeHtml(id) + '"' + attrs + ' value="' + escapeHtml(value) + '" inputmode="decimal" aria-label="' + escapeHtml(label) + '">';
-        return '<div class="field-card"><label for="' + escapeHtml(id) + '">' + escapeHtml(label) + suffix + '</label><div class="hint">' + escapeHtml(hint) + '</div>' + input + evidenceControl + '</div>';
+        return '<div class="field-card"><label for="' + escapeHtml(id) + '">' + escapeHtml(label) + suffix + '</label>' + input + evidenceControl + '</div>';
       }
-      input = '<textarea id="' + escapeHtml(id) + '"' + attrs + ' placeholder="记录客户确认的事实；未知信息标记为待确认" aria-label="' + escapeHtml(label) + '">' + escapeHtml(value) + '</textarea>';
-      return '<div class="field-card"><label for="' + escapeHtml(id) + '">' + escapeHtml(label) + '</label><div class="hint">' + escapeHtml(hint) + '</div>' + input + evidenceControl + '</div>';
+      input = '<textarea id="' + escapeHtml(id) + '"' + attrs + ' aria-label="' + escapeHtml(label) + '">' + escapeHtml(value) + '</textarea>';
+      return '<div class="field-card"><label for="' + escapeHtml(id) + '">' + escapeHtml(label) + '</label>' + input + evidenceControl + '</div>';
     }).join("");
   }
   function renderTabs() {
@@ -587,22 +565,17 @@
   function renderStage() {
     current = stages[activeIndex];
     document.getElementById("caseName").textContent = caseId.charAt(0).toUpperCase() + caseId.slice(1);
-    document.getElementById("currentStageLabel").textContent = current.name;
-    document.getElementById("currentStageSub").textContent = current.subtitle;
-    document.getElementById("stageEyebrow").textContent = "第 " + (activeIndex + 1) + " 阶段 · " + current.name;
+    document.getElementById("stageEyebrow").textContent = "阶段 " + (activeIndex + 1) + " / " + stages.length;
     document.getElementById("stageTitle").textContent = current.title;
-    document.getElementById("stageDescription").textContent = current.description;
-    document.getElementById("stageChip").textContent = current.name;
     document.getElementById("objective").innerHTML = current.objective;
-    var content = '<div class="section-label"><h3>' + escapeHtml(current.section) + '</h3><span>' + escapeHtml(current.sectionHint) + '</span></div>' +
+    var content = '<div class="section-label"><h3>' + escapeHtml(current.section) + '</h3></div>' +
       '<div class="field-grid">' + stageFields(current) + '</div>' +
-      '<div class="section-label"><h3>本阶段提问与判断提示</h3><span>用于启发追问，不代替客户证据</span></div>' +
+      '<div class="section-label"><h3>参考问题</h3></div>' +
       '<div class="prompt-row">' + current.prompts.map(function (p) {
         return '<div class="prompt-card"><b>' + escapeHtml(p[0]) + '</b>' + escapeHtml(p[1]) + '</div>';
       }).join("") + '</div>' + renderPractice(current);
     if (current.id === "business-case") content += renderRoi();
     document.getElementById("stageContent").innerHTML = content;
-    document.getElementById("coachCopy").textContent = current.coach;
     document.getElementById("coachList").innerHTML = current.tips.map(function (item) {
       return '<li>' + escapeHtml(item) + '</li>';
     }).join("");
@@ -617,19 +590,17 @@
   }
   function renderRoi() {
     return '<div class="formula-card" aria-live="polite">' +
-      '<div class="metric"><span class="metric-label">预计月度净收益</span><strong class="metric-value" id="roiMonthly">—</strong><span class="metric-note">效率价值减月度运行成本</span></div>' +
-      '<div class="metric"><span class="metric-label">首年 ROI</span><strong class="metric-value" id="roiYear">—</strong><span class="metric-note">扣除一次性实施与全年运行成本</span></div>' +
-      '<div class="metric"><span class="metric-label">静态回本期</span><strong class="metric-value" id="roiPayback">—</strong><span class="metric-note">基于当前输入假设</span></div></div>' +
-      '<p class="action-note">计算口径：月处理量 × 单笔节省分钟 × 自动处理比例 × 小时成本 ÷ 60。</p>' +
+      '<div class="metric"><span class="metric-label">预计月度净收益</span><strong class="metric-value" id="roiMonthly">—</strong></div>' +
+      '<div class="metric"><span class="metric-label">首年 ROI</span><strong class="metric-value" id="roiYear">—</strong></div>' +
+      '<div class="metric"><span class="metric-label">静态回本期</span><strong class="metric-value" id="roiPayback">—</strong></div></div>' +
       '<div class="scenario-box"><div class="section-label"><h3>ROI 敏感性区间</h3><label class="scenario-control" for="roiSwing">业务量与自动化率扰动 ± <input id="roiSwing" type="number" min="0" max="80" step="5" value="20"> %</label></div>' +
       '<div class="scenario-grid"><div class="scenario-card"><span>保守情景 · 月净收益</span><strong id="roiLow">—</strong></div><div class="scenario-card base"><span>基准情景 · 月净收益</span><strong id="roiBase">—</strong></div><div class="scenario-card"><span>上行情景 · 月净收益</span><strong id="roiHigh">—</strong></div></div>' +
-      '<p class="scenario-note">情景区间只对业务量和自动化比例做同幅扰动；不是概率预测。请用客户确认的数据和合理区间替换。</p></div>';
+      '<p class="scenario-note">敏感性示例 · 非收益预测</p></div>';
   }
   function renderPractice(stage) {
     return '<div class="practice-box"><div class="section-label"><h3>练一句下一步追问</h3><span>表达结构自检</span></div>' +
-      '<label for="practiceQuestion">写下你准备对客户说的一句话</label>' +
-      '<div class="practice-input-row"><textarea id="practiceQuestion" placeholder="先写问题，不要急着介绍方案">' + escapeHtml(state.practice[stage.id] || "") + '</textarea><button class="btn small" id="practiceBtn" type="button">查看自检建议</button></div>' +
-      '<p class="practice-hint">反馈会检查开放式问法、是否提前推介，以及是否贴合当前阶段；它不判断案例事实。</p>' +
+      '<label for="practiceQuestion">下一步追问</label>' +
+      '<div class="practice-input-row"><textarea id="practiceQuestion">' + escapeHtml(state.practice[stage.id] || "") + '</textarea><button class="btn small" id="practiceBtn" type="button">查看自检建议</button></div>' +
       '<div class="practice-feedback" id="practiceFeedback" aria-live="polite" hidden></div></div>';
   }
   function bindPractice() {
