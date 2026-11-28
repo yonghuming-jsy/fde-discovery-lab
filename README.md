@@ -18,6 +18,20 @@ The public page is a static browser-side prototype. The active case and stage ca
 
 Notes stay in the current browser's local storage unless the learner exports them as Markdown. The public demo does not connect to an account system or live model.
 
+## Improvements informed by GitHub projects
+
+- Added a response drill with a compact coaching review: strengths, the biggest adjustment, and a suggested next question. Its feedback is rule-based and clearly labeled; it does not pretend to be an AI scorecard.
+- Added a structured customer-discovery sequence that keeps the learner on the customer's context, pain, impact, buying reality, and commitment before moving into solution design.
+- Added a per-field evidence label for customer-confirmed facts, assumptions, and items still to verify; the review highlights unconfirmed gaps and preserves those labels in exports.
+- Added conservative, baseline, and upside ROI views so one estimate is not presented as a forecast. The sensitivity range is editable and labeled as an assumption.
+- Kept the public prototype free of browser-side model keys. A future live roleplay integration should use a server-side session and explicit time/spend limits.
+
+References reviewed:
+
+- [GoodHand-Off/ai-sales-roleplay](https://github.com/GoodHand-Off/ai-sales-roleplay) uses scenario roleplay, a structured coaching scorecard, and server-side session and spend safeguards.
+- [Pouya-Mansournia/FoundryOS customer-discovery command](https://github.com/Pouya-Mansournia/FoundryOS/blob/main/commands/customer-discovery.md) emphasizes discovery evidence and delaying solution pitches until the interview has established the problem.
+- [EricGrav1/sales-game](https://github.com/EricGrav1/sales-game) demonstrates lightweight response-based practice in a single HTML page.
+
 ## Publish
 
 The repository is published with GitHub Pages at:

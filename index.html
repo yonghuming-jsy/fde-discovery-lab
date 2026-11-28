@@ -99,6 +99,8 @@
     .field-card textarea:focus, .field-card input:focus, .field-card select:focus { border-color: var(--cyan-dark); box-shadow: 0 0 0 3px rgba(20,110,112,.1); }
     .field-card select { min-height: 42px; }
     .field-card .unit { color: var(--muted-2); font-size: .69rem; font-weight: 650; }
+    .field-status-row { display: flex; align-items: center; gap: 7px; margin-top: 8px; color: var(--muted-2); font-size: .68rem; }
+    .field-status-row select { width: auto; min-height: 29px; padding: 3px 7px; font-size: .7rem; }
     .prompt-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
     .prompt-card { min-height: 88px; border: 1px solid #e5eaf0; border-radius: 8px; padding: 11px 12px; color: var(--muted); background: #fafbfd; font-size: .76rem; }
     .prompt-card b { display: block; margin-bottom: 5px; color: var(--ink); font-size: .76rem; }
@@ -128,6 +130,30 @@
     .mini-track span { display: block; height: 100%; width: 0; background: var(--cyan); transition: width .2s; }
     .evidence-count { margin-top: 7px; color: #d2dce5; font-size: .68rem; }
     .local-note { margin-top: 14px; padding: 10px 11px; background: #f4f7fa; border-radius: 8px; color: var(--muted); font-size: .68rem; }
+    .practice-box { margin-top: 20px; padding: 15px; border: 1px solid #dce8e6; border-radius: 10px; background: #f7fbfa; }
+    .practice-box .section-label { margin-top: 0; }
+    .practice-input-row { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 9px; align-items: end; }
+    .practice-box label { display: block; margin-bottom: 6px; color: var(--ink); font-size: .78rem; font-weight: 800; }
+    .practice-box textarea { width: 100%; min-height: 66px; padding: 9px 10px; border: 1px solid #d6e1df; border-radius: 7px; background: white; color: var(--ink); resize: vertical; font: inherit; font-size: .82rem; }
+    .practice-box textarea:focus, .scenario-control input:focus { outline: 2px solid rgba(20,110,112,.18); border-color: var(--cyan-dark); }
+    .practice-hint { margin: 7px 0 0; color: var(--muted-2); font-size: .68rem; }
+    .practice-feedback { margin-top: 12px; padding: 12px; border-radius: 8px; background: white; border: 1px solid var(--line); }
+    .practice-feedback[hidden] { display: none; }
+    .feedback-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; color: var(--navy); font-size: .8rem; font-weight: 850; }
+    .feedback-score { color: var(--cyan-dark); font-size: .76rem; }
+    .feedback-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 8px; margin-top: 9px; }
+    .feedback-item { padding: 9px; background: #f6f8fa; border-radius: 7px; color: var(--muted); font-size: .7rem; }
+    .feedback-item b { display: block; margin-bottom: 3px; color: var(--ink); font-size: .71rem; }
+    .feedback-next { margin: 9px 0 0; color: var(--ink); font-size: .74rem; }
+    .scenario-box { margin-top: 15px; padding: 13px; border: 1px solid var(--line); border-radius: 9px; background: #fbfcfd; }
+    .scenario-control { display: flex; align-items: center; gap: 7px; color: var(--muted); font-size: .72rem; }
+    .scenario-control input { width: 70px; padding: 5px 7px; border: 1px solid #d9e0e7; border-radius: 6px; color: var(--ink); }
+    .scenario-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 8px; margin-top: 10px; }
+    .scenario-card { padding: 10px; border-radius: 7px; background: #f1f4f7; }
+    .scenario-card.base { background: #e7f4f1; }
+    .scenario-card span { display: block; color: var(--muted); font-size: .68rem; }
+    .scenario-card strong { display: block; margin-top: 2px; color: var(--navy); font-size: .89rem; }
+    .scenario-note { margin: 8px 0 0; color: var(--muted-2); font-size: .67rem; }
     .toast { position: fixed; right: 22px; bottom: 22px; z-index: 10; padding: 11px 15px; border-radius: 8px; background: var(--navy); color: white; box-shadow: var(--shadow); font-size: .82rem; opacity: 0; transform: translateY(7px); transition: .2s; pointer-events: none; }
     .toast.show { opacity: 1; transform: none; }
     .footer { margin: 22px 2px 0; display: flex; justify-content: space-between; gap: 18px; color: var(--muted-2); font-size: .7rem; }
@@ -161,6 +187,8 @@
       .formula-card { grid-template-columns: 1fr; }
       .action-row, .footer { display: block; }
       .action-buttons { margin-top: 12px; flex-wrap: wrap; }
+      .practice-input-row { grid-template-columns: 1fr; }
+      .feedback-grid, .scenario-grid { grid-template-columns: 1fr; }
     }
     @media (prefers-reduced-motion: reduce) { *, *:before, *:after { scroll-behavior: auto !important; transition: none !important; } }
   </style>
@@ -244,8 +272,8 @@
         <p class="coach-copy" id="coachCopy"></p>
         <ul class="coach-list" id="coachList"></ul>
         <div class="evidence-box">
-          <div class="evidence-top"><span>本阶段证据完整度</span><span class="evidence-score" id="scoreValue">0%</span></div>
-          <p>只统计已填写的发现项，不代表自动判分或客户确认。</p>
+          <div class="evidence-top"><span>本阶段记录覆盖率</span><span class="evidence-score" id="scoreValue">0%</span></div>
+          <p>每条记录可标注为客户已确认、推断或待核实。</p>
           <div class="mini-track"><span id="scoreFill"></span></div>
           <div class="evidence-count" id="scoreCount">0 项已记录</div>
         </div>
@@ -379,7 +407,7 @@
   var stageId = params.get("stage") || "opportunity";
   var activeIndex = Math.max(0, stages.findIndex(function (s) { return s.id === stageId; }));
   var storageKey = "fde-discovery-lab:" + caseId;
-  var state = { values: {}, complete: {} };
+  var state = { values: {}, complete: {}, practice: {}, evidence: {} };
   var current = stages[activeIndex];
 
   function escapeHtml(value) {
@@ -394,7 +422,9 @@
         var parsed = JSON.parse(raw);
         if (parsed && typeof parsed === "object") state = {
           values: parsed.values && typeof parsed.values === "object" ? parsed.values : {},
-          complete: parsed.complete && typeof parsed.complete === "object" ? parsed.complete : {}
+          complete: parsed.complete && typeof parsed.complete === "object" ? parsed.complete : {},
+          practice: parsed.practice && typeof parsed.practice === "object" ? parsed.practice : {},
+          evidence: parsed.evidence && typeof parsed.evidence === "object" ? parsed.evidence : {}
         };
       }
     } catch (e) {}
@@ -420,14 +450,19 @@
       var id = item[0], label = item[1], hint = item[2], kind = item[3] || "textarea";
       var value = state.values[id] || "";
       var attrs = ' data-field="' + escapeHtml(id) + '"';
+      var evidence = state.evidence[id] || "unknown";
+      var evidenceControl = '<div class="field-status-row"><span>证据标记</span><select aria-label="' + escapeHtml(label) + '的证据标记" data-evidence="' + escapeHtml(id) + '">' +
+        '<option value="unknown"' + (evidence === "unknown" ? " selected" : "") + '>待核实</option>' +
+        '<option value="confirmed"' + (evidence === "confirmed" ? " selected" : "") + '>客户已确认</option>' +
+        '<option value="assumption"' + (evidence === "assumption" ? " selected" : "") + '>推断 / 假设</option></select></div>';
       var input;
       if (kind === "number") {
         var suffix = id === "automation-rate" ? '<span class="unit">%</span>' : (id.indexOf("cost") > -1 ? '<span class="unit">元</span>' : "");
         input = '<input type="number" min="0" step="any" id="' + escapeHtml(id) + '"' + attrs + ' value="' + escapeHtml(value) + '" inputmode="decimal" aria-label="' + escapeHtml(label) + '">';
-        return '<div class="field-card"><label for="' + escapeHtml(id) + '">' + escapeHtml(label) + suffix + '</label><div class="hint">' + escapeHtml(hint) + '</div>' + input + '</div>';
+        return '<div class="field-card"><label for="' + escapeHtml(id) + '">' + escapeHtml(label) + suffix + '</label><div class="hint">' + escapeHtml(hint) + '</div>' + input + evidenceControl + '</div>';
       }
       input = '<textarea id="' + escapeHtml(id) + '"' + attrs + ' placeholder="记录客户确认的事实；未知信息标记为待确认" aria-label="' + escapeHtml(label) + '">' + escapeHtml(value) + '</textarea>';
-      return '<div class="field-card"><label for="' + escapeHtml(id) + '">' + escapeHtml(label) + '</label><div class="hint">' + escapeHtml(hint) + '</div>' + input + '</div>';
+      return '<div class="field-card"><label for="' + escapeHtml(id) + '">' + escapeHtml(label) + '</label><div class="hint">' + escapeHtml(hint) + '</div>' + input + evidenceControl + '</div>';
     }).join("");
   }
   function renderTabs() {
@@ -455,7 +490,7 @@
       '<div class="section-label"><h3>本阶段提问与判断提示</h3><span>用于启发追问，不代替客户证据</span></div>' +
       '<div class="prompt-row">' + current.prompts.map(function (p) {
         return '<div class="prompt-card"><b>' + escapeHtml(p[0]) + '</b>' + escapeHtml(p[1]) + '</div>';
-      }).join("") + '</div>';
+      }).join("") + '</div>' + renderPractice(current);
     if (current.id === "business-case") content += renderRoi();
     document.getElementById("stageContent").innerHTML = content;
     document.getElementById("coachCopy").textContent = current.coach;
@@ -466,6 +501,7 @@
     document.getElementById("nextBtn").textContent = activeIndex === stages.length - 1 ? "回到机会判断" : "进入下一阶段";
     renderTabs();
     bindFields();
+    bindPractice();
     updateScore();
     renderSummary();
     if (current.id === "business-case") bindRoi();
@@ -475,7 +511,64 @@
       '<div class="metric"><span class="metric-label">预计月度净收益</span><strong class="metric-value" id="roiMonthly">—</strong><span class="metric-note">效率价值减月度运行成本</span></div>' +
       '<div class="metric"><span class="metric-label">首年 ROI</span><strong class="metric-value" id="roiYear">—</strong><span class="metric-note">扣除一次性实施与全年运行成本</span></div>' +
       '<div class="metric"><span class="metric-label">静态回本期</span><strong class="metric-value" id="roiPayback">—</strong><span class="metric-note">基于当前输入假设</span></div></div>' +
-      '<p class="action-note">计算口径：月处理量 × 单笔节省分钟 × 自动处理比例 × 小时成本 ÷ 60。</p>';
+      '<p class="action-note">计算口径：月处理量 × 单笔节省分钟 × 自动处理比例 × 小时成本 ÷ 60。</p>' +
+      '<div class="scenario-box"><div class="section-label"><h3>ROI 敏感性区间</h3><label class="scenario-control" for="roiSwing">业务量与自动化率扰动 ± <input id="roiSwing" type="number" min="0" max="80" step="5" value="20"> %</label></div>' +
+      '<div class="scenario-grid"><div class="scenario-card"><span>保守情景 · 月净收益</span><strong id="roiLow">—</strong></div><div class="scenario-card base"><span>基准情景 · 月净收益</span><strong id="roiBase">—</strong></div><div class="scenario-card"><span>上行情景 · 月净收益</span><strong id="roiHigh">—</strong></div></div>' +
+      '<p class="scenario-note">情景区间只对业务量和自动化比例做同幅扰动；不是概率预测。请用客户确认的数据和合理区间替换。</p></div>';
+  }
+  function renderPractice(stage) {
+    return '<div class="practice-box"><div class="section-label"><h3>练一句下一步追问</h3><span>本地规则反馈 · 不调用 AI</span></div>' +
+      '<label for="practiceQuestion">写下你准备对客户说的一句话</label>' +
+      '<div class="practice-input-row"><textarea id="practiceQuestion" placeholder="先写问题，不要急着介绍方案">' + escapeHtml(state.practice[stage.id] || "") + '</textarea><button class="btn small" id="practiceBtn" type="button">生成教练反馈</button></div>' +
+      '<p class="practice-hint">反馈会检查开放式问法、是否提前推介，以及是否贴合当前阶段；它不判断案例事实。</p>' +
+      '<div class="practice-feedback" id="practiceFeedback" aria-live="polite" hidden></div></div>';
+  }
+  function bindPractice() {
+    var input = document.getElementById("practiceQuestion");
+    var button = document.getElementById("practiceBtn");
+    if (!input || !button) return;
+    input.addEventListener("input", function () {
+      state.practice[current.id] = input.value;
+      saveState(false);
+    });
+    button.addEventListener("click", reviewPracticeQuestion);
+  }
+  function reviewPracticeQuestion() {
+    var question = document.getElementById("practiceQuestion").value.trim();
+    var panel = document.getElementById("practiceFeedback");
+    if (!question) {
+      panel.hidden = false;
+      panel.innerHTML = '<div class="feedback-head">先写下你准备问客户的问题</div><p class="feedback-next">可以从当前阶段任一提问提示开始，再改成自己的表达。</p>';
+      return;
+    }
+    var pitch = /我们的方案|我们的产品|我们可以帮|建议你们用|用AI就能|交给AI|我给你演示/.test(question);
+    var open = /怎么|如何|哪些|什么|为什么|为何|请描述|请带我|能分享|怎样|谁|多少|什么时候|在哪一步/.test(question);
+    var stagePatterns = {
+      opportunity: /触发|促使|问题|影响|代价|成本|为什么|变化|决策|预算|时间/,
+      discovery: /流程|步骤|频次|数据|系统|例外|权限|谁|怎么|如何/,
+      solution: /集成|验收|风险|复核|部署|方案|边界|回退|权限|指标/,
+      "business-case": /成本|收益|基线|回本|预算|ROI|投资|节省|假设|处理量/,
+      handoff: /负责人|日期|下一步|验收|依赖|会议|交付|谁来|范围/
+    };
+    var relevant = stagePatterns[current.id].test(question);
+    var score = (pitch ? 0 : 1) + (open ? 1 : 0) + (relevant ? 1 : 0);
+    var strengths = [];
+    if (!pitch) strengths.push("没有提前介绍方案");
+    if (open) strengths.push("给客户留出展开说明的空间");
+    if (relevant) strengths.push("提问贴合当前阶段目标");
+    var fix = pitch ? "把产品承诺先放下，先问清客户的现状和证据。" :
+      (!open ? "改成开放式问题，避免只得到“是/否”或一个数字。" :
+      (!relevant ? "再聚焦当前阶段要验证的事实。" : "继续追问实例、口径和来源，确认回答可核验。"));
+    var missing = current.fields.find(function (field) {
+      return !String(state.values[field[0]] || "").trim() || state.evidence[field[0]] !== "confirmed";
+    });
+    var nextQuestion = missing ? (String(state.values[missing[0]] || "").trim() ? "先核实「" : "优先补充「") + missing[1] + "」：" + missing[2] : current.prompts[0][1];
+    panel.hidden = false;
+    panel.innerHTML = '<div class="feedback-head"><span>结构化练习反馈</span><span class="feedback-score">' + score + ' / 3 · 规则提示</span></div>' +
+      '<div class="feedback-grid"><div class="feedback-item"><b>有效点</b>' + (strengths.length ? escapeHtml(strengths.join("；")) : "这句话还没有命中阶段目标。") + '</div>' +
+      '<div class="feedback-item"><b>最该改进</b>' + escapeHtml(fix) + '</div>' +
+      '<div class="feedback-item"><b>尝试这样追问</b>' + escapeHtml(current.prompts[0][1]) + '</div></div>' +
+      '<p class="feedback-next"><strong>本阶段待验证：</strong>' + escapeHtml(nextQuestion) + '</p>';
   }
   function bindFields() {
     Array.prototype.forEach.call(document.querySelectorAll("[data-field]"), function (el) {
@@ -486,16 +579,26 @@
         if (current.id === "business-case") calculateRoi();
       });
     });
+    Array.prototype.forEach.call(document.querySelectorAll("[data-evidence]"), function (el) {
+      el.addEventListener("change", function () {
+        state.evidence[el.getAttribute("data-evidence")] = el.value;
+        updateScore();
+        saveState(false);
+      });
+    });
   }
   function updateScore() {
     var fields = current.fields.map(function (f) { return f[0]; });
     var filled = fields.filter(function (key) {
       return String(state.values[key] || "").trim() !== "";
     }).length;
+    var confirmed = fields.filter(function (key) {
+      return String(state.values[key] || "").trim() !== "" && state.evidence[key] === "confirmed";
+    }).length;
     var pct = fields.length ? Math.round(filled * 100 / fields.length) : 0;
     document.getElementById("scoreValue").textContent = pct + "%";
     document.getElementById("scoreFill").style.width = pct + "%";
-    document.getElementById("scoreCount").textContent = filled + " / " + fields.length + " 项已记录";
+    document.getElementById("scoreCount").textContent = filled + " / " + fields.length + " 项已记录 · " + confirmed + " 项客户已确认";
     document.getElementById("coverageLabel").textContent = filled + " / " + fields.length + " 已记录";
     document.getElementById("progressFill").style.width = pct + "%";
     document.getElementById("progressText").textContent = pct + "%";
@@ -506,6 +609,15 @@
     renderTabs();
   }
   function bindRoi() {
+    var swing = document.getElementById("roiSwing");
+    if (swing) {
+      swing.value = state.values["roi-swing"] == null || state.values["roi-swing"] === "" ? "20" : state.values["roi-swing"];
+      swing.addEventListener("input", function () {
+        state.values["roi-swing"] = swing.value;
+        calculateRoi();
+        saveState(false);
+      });
+    }
     calculateRoi();
   }
   function numberValue(id) {
@@ -529,11 +641,19 @@
     var firstYearCost = monthlyRun * 12 + setup;
     var roi = firstYearCost > 0 ? (firstYearNet / firstYearCost) * 100 : null;
     var payback = monthlyNet > 0 ? setup / monthlyNet : null;
+    var swingRaw = state.values["roi-swing"];
+    var swingPct = swingRaw == null || swingRaw === "" ? 20 : Number(swingRaw);
+    var swing = Math.max(0, Math.min(Number.isFinite(swingPct) ? swingPct : 20, 80)) / 100;
+    var lowValue = volume * (1 - swing) * minutes * automation * (1 - swing) * hourly / 60 - monthlyRun;
+    var highValue = volume * (1 + swing) * minutes * Math.min(automation * (1 + swing), 1) * hourly / 60 - monthlyRun;
     var monthEl = document.getElementById("roiMonthly");
     if (!monthEl) return;
     monthEl.textContent = money(monthlyNet);
     document.getElementById("roiYear").textContent = roi === null ? "—" : Math.round(roi) + "%";
     document.getElementById("roiPayback").textContent = payback === null ? "—" : (Math.round(payback * 10) / 10) + " 个月";
+    document.getElementById("roiLow").textContent = money(lowValue);
+    document.getElementById("roiBase").textContent = money(monthlyNet);
+    document.getElementById("roiHigh").textContent = money(highValue);
   }
   function setStage(index) {
     activeIndex = (index + stages.length) % stages.length;
@@ -553,7 +673,15 @@
       stage.fields.forEach(function (field) {
         var value = state.values[field[0]];
         lines.push("- **" + field[1] + "：** " + (value && String(value).trim() ? String(value).trim().replace(/\n/g, " ") : "待补充"));
+        if (value && String(value).trim()) {
+          var evidenceLabel = { confirmed: "客户已确认", assumption: "推断 / 假设", unknown: "待核实" }[state.evidence[field[0]] || "unknown"];
+          lines.push("  - 证据标记：" + evidenceLabel);
+        }
       });
+      if (stage.id === "business-case") {
+        lines.push("- **ROI 情景扰动：** ±" + (state.values["roi-swing"] == null || state.values["roi-swing"] === "" ? "20" : state.values["roi-swing"]) + "%");
+      }
+      if (state.practice[stage.id]) lines.push("- **练习追问：** " + String(state.practice[stage.id]).trim().replace(/\n/g, " "));
       lines.push("- **阶段状态：** " + (state.complete[stage.id] ? "已完成" : "进行中"), "");
     });
     var blob = new Blob([lines.join("\n")], { type: "text/markdown;charset=utf-8" });
